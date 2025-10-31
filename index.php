@@ -219,7 +219,7 @@ if (isset($_SESSION['show_seat_modal'])) {
 
                 <!-- Desktop Menu -->
                 <div class="hidden lg:flex items-center space-x-8">
-                    <a href="#home" class="nav-link text-gray-700 hover:text-indigo-600 transition-colors duration-300">Home</a>
+                    <a href="#home" class="nav-link text-indigo-600 active transition-colors duration-300">Home</a>
                     <a href="about.php" class="nav-link text-gray-700 hover:text-indigo-600 transition-colors duration-300">About</a>
                     <a href="find_seat.php" class="nav-link text-gray-700 hover:text-indigo-600 transition-colors duration-300">Find Seat</a>
                     <a href="notice.php" class="nav-link text-gray-700 hover:text-indigo-600 transition-colors duration-300">Notices</a>
@@ -279,7 +279,7 @@ if (isset($_SESSION['show_seat_modal'])) {
 
             <!-- Mobile Menu Links -->
             <div class="space-y-2 mb-8">
-                <a href="#home" class="mobile-nav-link block px-4 py-3 text-gray-700 hover:bg-indigo-50 hover:text-indigo-600 rounded-xl transition-colors duration-200 flex items-center">
+                <a href="#home" class="mobile-nav-link block px-4 py-3 text-indigo-600 bg-indigo-50 rounded-xl transition-colors duration-200 flex items-center">
                     <i class="fas fa-home mr-3 text-indigo-500 w-5"></i>
                     Home
                 </a>

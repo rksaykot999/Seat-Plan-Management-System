@@ -5,6 +5,7 @@ $username = "root";
 $password = "";
 $database = "seatplan_management";
 
+
 $conn = new mysqli($servername, $username, $password, $database);
 if ($conn->connect_error) {
     die("Database Connection Failed: " . $conn->connect_error);
@@ -377,7 +378,7 @@ $settings = $conn->query("SELECT * FROM site_settings LIMIT 1")->fetch_assoc();
             </div>
             
             <div class="grid md:grid-cols-2 gap-12">
-                <div class="bg-gradient-to-br from-indigo-50 to-purple-50 rounded-2xl p-8 card-hover" data-aos="fade-right">
+                <div class="bg-gradient-to-br from-indigo-50 to-purple-50 rounded-2xl p-8 card-hover" data-aos="fade-up" data-aos-desktop="fade-right">
                     <div class="w-16 h-16 bg-indigo-600 rounded-xl flex items-center justify-center mb-6">
                         <i class="fas fa-bullseye text-white text-2xl"></i>
                     </div>
@@ -400,8 +401,8 @@ $settings = $conn->query("SELECT * FROM site_settings LIMIT 1")->fetch_assoc();
                         </li>
                     </ul>
                 </div>
-                
-                <div class="bg-gradient-to-br from-purple-50 to-pink-50 rounded-2xl p-8 card-hover" data-aos="fade-left">
+
+                <div class="bg-gradient-to-br from-purple-50 to-pink-50 rounded-2xl p-8 card-hover" data-aos="fade-up" data-aos-desktop="fade-left">
                     <div class="w-16 h-16 bg-purple-600 rounded-xl flex items-center justify-center mb-6">
                         <i class="fas fa-eye text-white text-2xl"></i>
                     </div>
@@ -456,7 +457,7 @@ $settings = $conn->query("SELECT * FROM site_settings LIMIT 1")->fetch_assoc();
     <section class="py-16 md:py-20 bg-white">
         <div class="max-w-6xl mx-auto px-4 sm:px-6">
             <div class="grid md:grid-cols-2 gap-12 items-center">
-                <div data-aos="fade-right">
+                <div data-aos="fade-up" data-aos-desktop="fade-right">
                     <h2 class="text-3xl md:text-4xl font-bold text-gray-800 mb-6">Our Story</h2>
                     <p class="text-gray-600 mb-6">
                         The Seat Plan Management System was born out of a recognized need to modernize the traditional, paper-based exam seating arrangement process. We observed the challenges faced by educational institutions in managing large-scale examinations efficiently.
@@ -468,7 +469,7 @@ $settings = $conn->query("SELECT * FROM site_settings LIMIT 1")->fetch_assoc();
                         Today, we continue to evolve our platform based on feedback from administrators, faculty, and students, ensuring we remain at the forefront of educational technology innovation.
                     </p>
                 </div>
-                <div class="relative" data-aos="fade-left">
+                <div class="relative" data-aos="fade-up" data-aos-desktop="fade-left">
                     <div class="bg-gradient-to-br from-indigo-500 to-purple-600 rounded-2xl p-8 text-white">
                         <h3 class="text-2xl font-bold mb-4">Our Timeline</h3>
                         <div class="space-y-6">
@@ -695,12 +696,24 @@ $settings = $conn->query("SELECT * FROM site_settings LIMIT 1")->fetch_assoc();
     </footer>
 
     <script>
-        // Initialize AOS
+        document.addEventListener("DOMContentLoaded", function () {
+            const items = document.querySelectorAll("[data-aos-desktop]");
+
+            items.forEach(el => {
+                const desktopAnim = el.getAttribute("data-aos-desktop");
+
+                if (window.innerWidth >= 768) {
+                    el.setAttribute("data-aos", desktopAnim);
+                } else {
+                    el.setAttribute("data-aos", "fade-up");
+                }
+            });
+        });
         AOS.init({
             duration: 800,
             once: true
         });
-
+        
         // Mobile menu functionality - FIXED
         const mobileMenuButton = document.getElementById('mobile-menu-button');
         const mobileMenuContainer = document.getElementById('mobile-menu-container');

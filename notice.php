@@ -5,6 +5,7 @@ $username = "root";
 $password = "";
 $database = "seatplan_management";
 
+
 $conn = new mysqli($servername, $username, $password, $database);
 if ($conn->connect_error) {
     die("Database Connection Failed: " . $conn->connect_error);
@@ -359,11 +360,11 @@ if (isset($_GET['id']) && is_numeric($_GET['id'])) {
                     <i class="fas fa-bullhorn mr-3 text-indigo-500 w-5"></i>
                     Notices
                 </a>
-                <a href="index.php#departments" class="mobile-nav-link block px-4 py-3 text-gray-700 hover:bg-indigo-50 hover:text-indigo-600 rounded-xl transition-colors duration-200 flex items-center">
+                <a href="department.php" class="mobile-nav-link block px-4 py-3 text-gray-700 hover:bg-indigo-50 hover:text-indigo-600 rounded-xl transition-colors duration-200 flex items-center">
                     <i class="fas fa-university mr-3 text-indigo-500 w-5"></i>
                     Departments
                 </a>
-                <a href="index.php#contact" class="mobile-nav-link block px-4 py-3 text-gray-700 hover:bg-indigo-50 hover:text-indigo-600 rounded-xl transition-colors duration-200 flex items-center">
+                <a href="contact.php" class="mobile-nav-link block px-4 py-3 text-gray-700 hover:bg-indigo-50 hover:text-indigo-600 rounded-xl transition-colors duration-200 flex items-center">
                     <i class="fas fa-envelope mr-3 text-indigo-500 w-5"></i>
                     Contact
                 </a>
@@ -784,6 +785,19 @@ if (isset($_GET['id']) && is_numeric($_GET['id'])) {
     </footer>
 
     <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const items = document.querySelectorAll("[data-aos-desktop]");
+
+            items.forEach(el => {
+                const desktopAnim = el.getAttribute("data-aos-desktop");
+
+                if (window.innerWidth >= 768) {
+                    el.setAttribute("data-aos", desktopAnim);
+                } else {
+                    el.setAttribute("data-aos", "fade-up");
+                }
+            });
+        });
         // Initialize AOS
         AOS.init({
             duration: 800,

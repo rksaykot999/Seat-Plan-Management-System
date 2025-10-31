@@ -5,6 +5,7 @@ $username = "root";
 $password = "";
 $database = "seatplan_management";
 
+
 $conn = new mysqli($servername, $username, $password, $database);
 if ($conn->connect_error) {
     die("Database Connection Failed: " . $conn->connect_error);
@@ -454,12 +455,12 @@ if (isset($_GET['id']) && is_numeric($_GET['id'])) {
         
         <!-- Floating Elements -->
         <?php if (!$current_department): ?>
-        <div class="absolute bottom-10 left-10 floating" data-aos="fade-right" data-aos-delay="500">
+        <div class="absolute bottom-10 left-10 floating" data-aos="fade-up" data-aos-desktop="fade-right" data-aos-delay="500">
             <div class="bg-white/20 backdrop-blur-sm rounded-full p-4">
                 <i class="fas fa-university text-white text-2xl"></i>
             </div>
         </div>
-        <div class="absolute top-10 right-10 floating" data-aos="fade-left" data-aos-delay="700" style="animation-delay: 0.5s;">
+        <div class="absolute top-10 right-10 floating" data-aos="fade-up" data-aos-desktop="fade-left" data-aos-delay="700" style="animation-delay: 0.5s;">
             <div class="bg-white/20 backdrop-blur-sm rounded-full p-4">
                 <i class="fas fa-graduation-cap text-white text-2xl"></i>
             </div>
@@ -847,7 +848,7 @@ if (isset($_GET['id']) && is_numeric($_GET['id'])) {
             </div>
             
             <div class="grid md:grid-cols-2 gap-8">
-                <div data-aos="fade-right">
+                <div data-aos="fade-up" data-aos-desktop="fade-right">
                     <h3 class="text-2xl font-bold text-gray-800 mb-6">Undergraduate Programs</h3>
                     <div class="space-y-4">
                         <div class="bg-gray-50 rounded-xl p-6">
@@ -872,7 +873,7 @@ if (isset($_GET['id']) && is_numeric($_GET['id'])) {
                     </div>
                 </div>
                 
-                <div data-aos="fade-left">
+                <div data-aos="fade-up" data-aos-desktop="fade-left">
                     <h3 class="text-2xl font-bold text-gray-800 mb-6">Postgraduate Programs</h3>
                     <div class="space-y-4">
                         <div class="bg-gray-50 rounded-xl p-6">
@@ -985,6 +986,19 @@ if (isset($_GET['id']) && is_numeric($_GET['id'])) {
     </footer>
 
     <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const items = document.querySelectorAll("[data-aos-desktop]");
+
+            items.forEach(el => {
+                const desktopAnim = el.getAttribute("data-aos-desktop");
+
+                if (window.innerWidth >= 768) {
+                    el.setAttribute("data-aos", desktopAnim);
+                } else {
+                    el.setAttribute("data-aos", "fade-up");
+                }
+            });
+        });
         // Initialize AOS
         AOS.init({
             duration: 800,

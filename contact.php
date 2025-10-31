@@ -5,6 +5,7 @@ $username = "root";
 $password = "";
 $database = "seatplan_management";
 
+
 $conn = new mysqli($servername, $username, $password, $database);
 if ($conn->connect_error) {
     die("Database Connection Failed: " . $conn->connect_error);
@@ -108,13 +109,13 @@ $faqs = [
             backdrop-filter: blur(10px);
             border-bottom: 1px solid rgba(255, 255, 255, 0.2);
         }
-
+        
         .nav-link {
             position: relative;
             font-weight: 500;
             transition: all 0.3s ease;
         }
-
+        
         .nav-link::after {
             content: '';
             position: absolute;
@@ -126,15 +127,15 @@ $faqs = [
             transition: all 0.3s ease;
             transform: translateX(-50%);
         }
-
+        
         .nav-link:hover::after {
             width: 100%;
         }
-
+        
         .nav-link.active::after {
             width: 100%;
         }
-
+        
         /* Mobile Menu Styles */
         .mobile-menu-container {
             position: fixed;
@@ -148,11 +149,11 @@ $faqs = [
             z-index: 1000;
             overflow-y: auto;
         }
-
+        
         .mobile-menu-container.open {
             right: 0;
         }
-
+        
         .mobile-menu-overlay {
             position: fixed;
             top: 0;
@@ -165,12 +166,12 @@ $faqs = [
             transition: all 0.3s ease;
             z-index: 999;
         }
-
+        
         .mobile-menu-overlay.open {
             opacity: 1;
             visibility: visible;
         }
-
+        
         /* Login Dropdown */
         .login-dropdown {
             opacity: 0;
@@ -178,26 +179,26 @@ $faqs = [
             transform: translateY(10px);
             transition: all 0.3s ease;
         }
-
+        
         .login-group:hover .login-dropdown {
             opacity: 1;
             visibility: visible;
             transform: translateY(0);
         }
-
+        
         /* Hamburger Animation */
         .hamburger-line {
             transition: all 0.3s ease;
         }
-
+        
         .hamburger.active .hamburger-line:nth-child(1) {
             transform: rotate(45deg) translate(6px, 6px);
         }
-
+        
         .hamburger.active .hamburger-line:nth-child(2) {
             opacity: 0;
         }
-
+        
         .hamburger.active .hamburger-line:nth-child(3) {
             transform: rotate(-45deg) translate(6px, -6px);
         }
@@ -280,8 +281,8 @@ $faqs = [
 </head>
 <body class="bg-gray-50 text-gray-800 font-sans">
 
-    <!-- Professional Navbar - FIXED -->
-    <nav class="navbar fixed top-0 left-0 w-full">
+    <!-- Professional Navbar -->
+    <nav class="navbar fixed top-0 left-0 w-full z-50">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between items-center h-16">
                 <!-- Logo -->
@@ -303,13 +304,13 @@ $faqs = [
                     <a href="department.php" class="nav-link text-gray-700 hover:text-indigo-600 transition-colors duration-300">Departments</a>
                     <a href="contact.php" class="nav-link text-indigo-600 active transition-colors duration-300">Contact</a>
                     
-                    <!-- Login Dropdown - FIXED -->
+                    <!-- Login Dropdown -->
                     <div class="login-group relative">
                         <button class="nav-link text-gray-700 hover:text-indigo-600 transition-colors duration-300 flex items-center space-x-1">
                             <span>Login</span>
                             <i class="fas fa-chevron-down text-xs mt-1"></i>
                         </button>
-                        <div class="login-dropdown w-48 bg-white rounded-xl shadow-xl border border-gray-100 py-2">
+                        <div class="login-dropdown absolute top-full right-0 mt-2 w-48 bg-white rounded-xl shadow-xl border border-gray-100 py-2">
                             <a href="student/login.php" class="block px-4 py-3 text-gray-700 hover:bg-indigo-50 hover:text-indigo-600 transition-colors duration-200 flex items-center">
                                 <i class="fas fa-user-graduate mr-3 text-indigo-500"></i>
                                 Student Login
@@ -322,9 +323,9 @@ $faqs = [
                     </div>
                 </div>
 
-                <!-- Mobile menu button - FIXED -->
+                <!-- Mobile menu button -->
                 <div class="lg:hidden">
-                    <button id="mobile-menu-button" class="hamburger p-2 rounded-lg hover:bg-gray-100 transition-colors duration-200 focus:outline-none">
+                    <button id="mobile-menu-button" class="hamburger p-2 rounded-lg hover:bg-gray-100 transition-colors duration-200">
                         <div class="w-6 h-6 flex flex-col justify-between">
                             <span class="hamburger-line w-full h-0.5 bg-gray-700 rounded"></span>
                             <span class="hamburger-line w-full h-0.5 bg-gray-700 rounded"></span>
@@ -336,10 +337,10 @@ $faqs = [
         </div>
     </nav>
 
-    <!-- Mobile Menu Overlay - FIXED -->
+    <!-- Mobile Menu Overlay -->
     <div id="mobile-menu-overlay" class="mobile-menu-overlay"></div>
 
-    <!-- Mobile Menu Sidebar - FIXED -->
+    <!-- Mobile Menu Sidebar -->
     <div id="mobile-menu-container" class="mobile-menu-container">
         <div class="p-6">
             <!-- Mobile Menu Header -->
@@ -352,7 +353,7 @@ $faqs = [
                         <h2 class="text-lg font-bold text-gray-800"><?= htmlspecialchars($settings['site_title']); ?></h2>
                     </div>
                 </div>
-                <button id="mobile-menu-close" class="p-2 rounded-lg hover:bg-gray-100 transition-colors duration-200 focus:outline-none">
+                <button id="mobile-menu-close" class="p-2 rounded-lg hover:bg-gray-100 transition-colors duration-200">
                     <i class="fas fa-times text-gray-600 text-lg"></i>
                 </button>
             </div>
@@ -437,18 +438,6 @@ $faqs = [
                 </a>
             </div>
         </div>
-        
-        <!-- Floating Elements -->
-        <div class="absolute bottom-10 left-10 floating" data-aos="fade-right" data-aos-delay="500">
-            <div class="bg-white/20 backdrop-blur-sm rounded-full p-4">
-                <i class="fas fa-envelope text-white text-2xl"></i>
-            </div>
-        </div>
-        <div class="absolute top-10 right-10 floating" data-aos="fade-left" data-aos-delay="700" style="animation-delay: 0.5s;">
-            <div class="bg-white/20 backdrop-blur-sm rounded-full p-4">
-                <i class="fas fa-phone-alt text-white text-2xl"></i>
-            </div>
-        </div>
     </section>
 
     <!-- Contact Information Section -->
@@ -509,100 +498,68 @@ $faqs = [
     <section id="contact-form" class="py-12 md:py-16 bg-gray-50">
         <div class="max-w-6xl mx-auto px-4 sm:px-6">
             <div class="grid lg:grid-cols-2 gap-12">
+
                 <!-- Contact Form -->
-                <div data-aos="fade-right">
+                <div data-aos="fade-up">
                     <h2 class="text-3xl md:text-4xl font-bold text-gray-800 mb-6">Send Us a Message</h2>
                     <p class="text-gray-600 mb-8">
-                        Have questions about exam seat plans or facing technical issues? Fill out the form below and we'll get back to you as soon as possible.
+                        Have questions about exam seat plans or facing technical issues? Fill out the form and we will respond shortly.
                     </p>
-                    
-                    <?php if ($form_success): ?>
-                        <div class="bg-green-50 border border-green-200 rounded-xl p-4 mb-6" data-aos="fade-up">
-                            <div class="flex items-center">
-                                <div class="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center mr-4">
-                                    <i class="fas fa-check text-green-600"></i>
-                                </div>
-                                <div>
-                                    <h4 class="font-bold text-green-800">Message Sent Successfully!</h4>
-                                    <p class="text-green-700">Thank you for your message. We'll get back to you soon.</p>
-                                </div>
-                            </div>
-                        </div>
-                    <?php endif; ?>
-                    
-                    <?php if ($form_error): ?>
-                        <div class="bg-red-50 border border-red-200 rounded-xl p-4 mb-6" data-aos="fade-up">
-                            <div class="flex items-center">
-                                <div class="w-10 h-10 bg-red-100 rounded-full flex items-center justify-center mr-4">
-                                    <i class="fas fa-exclamation-triangle text-red-600"></i>
-                                </div>
-                                <div>
-                                    <h4 class="font-bold text-red-800">Error Sending Message</h4>
-                                    <p class="text-red-700"><?= $error_message ?></p>
-                                </div>
-                            </div>
-                        </div>
-                    <?php endif; ?>
-                    
-                    <form method="POST" class="space-y-6">
+
+                    <form method="POST" class="space-y-6 w-full">
                         <div class="grid md:grid-cols-2 gap-6">
                             <div>
-                                <label for="name" class="block text-sm font-medium text-gray-700 mb-2">Full Name *</label>
-                                <input type="text" id="name" name="name" required 
-                                       class="w-full px-4 py-3 border border-gray-300 rounded-lg form-input focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition"
-                                       placeholder="Enter your full name"
-                                       value="<?= isset($_POST['name']) ? htmlspecialchars($_POST['name']) : '' ?>">
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Full Name *</label>
+                                <input type="text" name="name" required 
+                                    class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition"
+                                    placeholder="Enter full name">
                             </div>
                             <div>
-                                <label for="email" class="block text-sm font-medium text-gray-700 mb-2">Email Address *</label>
-                                <input type="email" id="email" name="email" required 
-                                       class="w-full px-4 py-3 border border-gray-300 rounded-lg form-input focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition"
-                                       placeholder="Enter your email address"
-                                       value="<?= isset($_POST['email']) ? htmlspecialchars($_POST['email']) : '' ?>">
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Email *</label>
+                                <input type="email" name="email" required 
+                                    class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition"
+                                    placeholder="Enter email">
                             </div>
                         </div>
-                        
+
                         <div>
-                            <label for="subject" class="block text-sm font-medium text-gray-700 mb-2">Subject *</label>
-                            <input type="text" id="subject" name="subject" required 
-                                   class="w-full px-4 py-3 border border-gray-300 rounded-lg form-input focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition"
-                                   placeholder="Enter message subject"
-                                   value="<?= isset($_POST['subject']) ? htmlspecialchars($_POST['subject']) : '' ?>">
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Subject *</label>
+                            <input type="text" name="subject" required 
+                                class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition"
+                                placeholder="Enter subject">
                         </div>
-                        
+
                         <div>
-                            <label for="message" class="block text-sm font-medium text-gray-700 mb-2">Message *</label>
-                            <textarea id="message" name="message" rows="6" required 
-                                      class="w-full px-4 py-3 border border-gray-300 rounded-lg form-input focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition"
-                                      placeholder="Enter your message"><?= isset($_POST['message']) ? htmlspecialchars($_POST['message']) : '' ?></textarea>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Message *</label>
+                            <textarea name="message" rows="6" required
+                                class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition"
+                                placeholder="Enter message"></textarea>
                         </div>
-                        
-                        <button type="submit" name="send_message" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-3 rounded-lg font-medium transition flex items-center justify-center shadow-lg">
+
+                        <button type="submit" name="send_message" 
+                            class="w-full bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-3 rounded-lg font-medium transition flex items-center justify-center shadow-lg">
                             <i class="fas fa-paper-plane mr-2"></i> Send Message
                         </button>
                     </form>
                 </div>
-                
-                <!-- Map & Additional Info -->
-                <div data-aos="fade-left">
+
+                <!-- Map & Contact Info -->
+                <div data-aos="fade-up">
                     <h2 class="text-3xl md:text-4xl font-bold text-gray-800 mb-6">Visit Our Campus</h2>
-                    
-                    <!-- Map Container -->
-                    <div class="map-container mb-8">
-                        <div class="bg-gray-200 h-80 flex items-center justify-center rounded-xl">
-                            <div class="text-center">
-                                <i class="fas fa-map-marked-alt text-gray-400 text-5xl mb-4"></i>
-                                <p class="text-gray-600 font-medium">Interactive Campus Map</p>
-                                <p class="text-gray-500 text-sm mt-2">Map would be embedded here</p>
-                            </div>
+
+                    <div class="mb-8 w-full h-72 md:h-80 bg-gray-200 rounded-xl flex items-center justify-center">
+                        <div class="text-center">
+                            <i class="fas fa-map-marked-alt text-gray-400 text-5xl mb-4"></i>
+                            <p class="text-gray-600 font-medium">Interactive Campus Map</p>
+                            <p class="text-gray-500 text-sm mt-2">Map will appear here</p>
                         </div>
                     </div>
-                    
-                    <!-- Additional Contact Information -->
+
                     <div class="bg-white rounded-xl shadow-md p-6">
                         <h3 class="text-xl font-bold text-gray-800 mb-4">Additional Information</h3>
-                        
+
                         <div class="space-y-4">
+
                             <div class="flex items-start">
                                 <div class="w-10 h-10 bg-indigo-100 rounded-lg flex items-center justify-center mr-4">
                                     <i class="fas fa-map-marker-alt text-indigo-600"></i>
@@ -612,46 +569,37 @@ $faqs = [
                                     <p class="text-gray-600">Educational Institution Campus<br>123 University Road<br>City, State 12345<br>Country</p>
                                 </div>
                             </div>
-                            
+
                             <div class="flex items-start">
                                 <div class="w-10 h-10 bg-indigo-100 rounded-lg flex items-center justify-center mr-4">
                                     <i class="fas fa-clock text-indigo-600"></i>
                                 </div>
                                 <div>
                                     <h4 class="font-semibold text-gray-700">Office Hours</h4>
-                                    <div class="text-gray-600">
-                                        <div class="flex justify-between">
-                                            <span>Monday - Thursday:</span>
-                                            <span>9:00 AM - 5:00 PM</span>
-                                        </div>
-                                        <div class="flex justify-between">
-                                            <span>Friday:</span>
-                                            <span>9:00 AM - 1:00 PM</span>
-                                        </div>
-                                        <div class="flex justify-between">
-                                            <span>Saturday - Sunday:</span>
-                                            <span>Closed</span>
-                                        </div>
-                                    </div>
+                                    <p class="text-gray-600">Mon - Thu: 9:00 AM - 5:00 PM<br>Friday: 9:00 AM - 1:00 PM<br>Sat - Sun: Closed</p>
                                 </div>
                             </div>
-                            
+
                             <div class="flex items-start">
                                 <div class="w-10 h-10 bg-indigo-100 rounded-lg flex items-center justify-center mr-4">
                                     <i class="fas fa-exclamation-circle text-indigo-600"></i>
                                 </div>
                                 <div>
                                     <h4 class="font-semibold text-gray-700">Emergency Contact</h4>
-                                    <p class="text-gray-600">For urgent exam-related issues during exam periods, contact the Exam Controller's Office directly.</p>
+                                    <p class="text-gray-600">For urgent exam-related issues during exams.</p>
                                     <p class="text-indigo-600 font-medium mt-1">+880 1700 123456</p>
                                 </div>
                             </div>
+
                         </div>
                     </div>
+
                 </div>
+
             </div>
         </div>
     </section>
+
 
     <!-- FAQ Section -->
     <section id="faq" class="py-12 md:py-16 bg-white">
@@ -662,8 +610,8 @@ $faqs = [
                     Find quick answers to common questions about exam seat plans and the system
                 </p>
             </div>
-            
-            <div class="bg-white rounded-xl shadow-md overflow-hidden" data-aos="fade-up" data-aos-delay="100">
+
+            <div class="bg-white px-6 rounded-xl shadow-md overflow-hidden" data-aos="fade-up" data-aos-delay="100">
                 <?php foreach ($faqs as $index => $faq): ?>
                     <div class="faq-item <?= $index === 0 ? 'active' : '' ?>" data-aos="fade-up" data-aos-delay="<?= ($index + 1) * 100 ?>">
                         <div class="faq-question" onclick="toggleFAQ(this)">
@@ -829,7 +777,7 @@ $faqs = [
             once: true
         });
 
-        // Mobile menu functionality - FIXED
+        // Mobile menu functionality
         const mobileMenuButton = document.getElementById('mobile-menu-button');
         const mobileMenuContainer = document.getElementById('mobile-menu-container');
         const mobileMenuOverlay = document.getElementById('mobile-menu-overlay');
@@ -850,29 +798,13 @@ $faqs = [
             document.body.style.overflow = '';
         }
 
-        // Event listeners - FIXED
-        if (mobileMenuButton) {
-            mobileMenuButton.addEventListener('click', openMobileMenu);
-        }
-        
-        if (mobileMenuClose) {
-            mobileMenuClose.addEventListener('click', closeMobileMenu);
-        }
-        
-        if (mobileMenuOverlay) {
-            mobileMenuOverlay.addEventListener('click', closeMobileMenu);
-        }
+        mobileMenuButton.addEventListener('click', openMobileMenu);
+        mobileMenuClose.addEventListener('click', closeMobileMenu);
+        mobileMenuOverlay.addEventListener('click', closeMobileMenu);
 
-        // Close mobile menu when clicking on a link - FIXED
+        // Close mobile menu when clicking on a link
         document.querySelectorAll('.mobile-nav-link').forEach(link => {
             link.addEventListener('click', closeMobileMenu);
-        });
-
-        // Close mobile menu when pressing Escape key - NEW
-        document.addEventListener('keydown', function(event) {
-            if (event.key === 'Escape') {
-                closeMobileMenu();
-            }
         });
 
         // FAQ toggle functionality

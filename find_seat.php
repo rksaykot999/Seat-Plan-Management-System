@@ -5,6 +5,7 @@ $username = "root";
 $password = "";
 $database = "seatplan_management";
 
+
 $conn = new mysqli($servername, $username, $password, $database);
 if ($conn->connect_error) {
     die("Database Connection Failed: " . $conn->connect_error);
@@ -700,7 +701,7 @@ if (isset($_SESSION['show_seat_modal'])) {
             </div>
             
             <div class="max-w-4xl mx-auto">
-                <div class="process-step" data-aos="fade-right">
+                <div class="process-step" data-aos="fade-up" data-aos-desktop="fade-right">
                     <div class="step-number">1</div>
                     <h3 class="text-xl font-bold text-gray-800 mb-2">Enter Your Details</h3>
                     <p class="text-gray-600">
@@ -708,7 +709,7 @@ if (isset($_SESSION['show_seat_modal'])) {
                     </p>
                 </div>
                 
-                <div class="process-step" data-aos="fade-right" data-aos-delay="100">
+                <div class="process-step" data-aos="fade-up" data-aos-desktop="fade-right" data-aos-delay="100">
                     <div class="step-number">2</div>
                     <h3 class="text-xl font-bold text-gray-800 mb-2">Submit The Form</h3>
                     <p class="text-gray-600">
@@ -716,7 +717,7 @@ if (isset($_SESSION['show_seat_modal'])) {
                     </p>
                 </div>
                 
-                <div class="process-step" data-aos="fade-right" data-aos-delay="200">
+                <div class="process-step" data-aos="fade-up" data-aos-desktop="fade-right" data-aos-delay="200">
                     <div class="step-number">3</div>
                     <h3 class="text-xl font-bold text-gray-800 mb-2">View Your Seat Details</h3>
                     <p class="text-gray-600">
@@ -724,7 +725,7 @@ if (isset($_SESSION['show_seat_modal'])) {
                     </p>
                 </div>
                 
-                <div class="process-step" data-aos="fade-right" data-aos-delay="300">
+                <div class="process-step" data-aos="fade-up" data-aos-desktop="fade-right" data-aos-delay="300">
                     <div class="step-number">4</div>
                     <h3 class="text-xl font-bold text-gray-800 mb-2">Print or Save</h3>
                     <p class="text-gray-600">
@@ -999,6 +1000,19 @@ if (isset($_SESSION['show_seat_modal'])) {
     </footer>
 
     <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const items = document.querySelectorAll("[data-aos-desktop]");
+
+            items.forEach(el => {
+                const desktopAnim = el.getAttribute("data-aos-desktop");
+
+                if (window.innerWidth >= 768) {
+                    el.setAttribute("data-aos", desktopAnim);
+                } else {
+                    el.setAttribute("data-aos", "fade-up");
+                }
+            });
+        });
         // Initialize AOS
         AOS.init({
             duration: 800,
