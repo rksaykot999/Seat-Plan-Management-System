@@ -345,11 +345,11 @@ if (isset($_SESSION['show_seat_modal'])) {
                             <i class="fas fa-chevron-down text-xs mt-1"></i>
                         </button>
                         <div class="login-dropdown absolute top-full right-0 mt-2 w-48 bg-white rounded-xl shadow-xl border border-gray-100 py-2">
-                            <a href="student/login.php" class="block px-4 py-3 text-gray-700 hover:bg-indigo-50 hover:text-indigo-600 transition-colors duration-200 flex items-center">
+                            <a href="login.php" class="block px-4 py-3 text-gray-700 hover:bg-indigo-50 hover:text-indigo-600 transition-colors duration-200 flex items-center">
                                 <i class="fas fa-user-graduate mr-3 text-indigo-500"></i>
                                 Student Login
                             </a>
-                            <a href="admin/login.php" class="block px-4 py-3 text-gray-700 hover:bg-indigo-50 hover:text-indigo-600 transition-colors duration-200 flex items-center">
+                            <a href="admin-login.php" class="block px-4 py-3 text-gray-700 hover:bg-indigo-50 hover:text-indigo-600 transition-colors duration-200 flex items-center">
                                 <i class="fas fa-user-shield mr-3 text-indigo-500"></i>
                                 Admin Login
                             </a>
