@@ -377,12 +377,19 @@ if (isset($_GET['logout'])) {
             to { opacity: 1; transform: translateY(0); }
         }
         
-        @media (max-width: 768px) {
+        @media (max-width: 1024px) {
             .sidebar {
                 transform: translateX(-100%);
+                z-index: 40;
             }
             .sidebar.open {
                 transform: translateX(0);
+            }
+            .main-content {
+                margin-left: 0 !important;
+            }
+            .mobile-menu-open {
+                overflow: hidden;
             }
         }
         
@@ -412,6 +419,7 @@ if (isset($_GET['logout'])) {
             z-index: 1000;
             align-items: center;
             justify-content: center;
+            padding: 1rem;
         }
         
         .modal.active {
@@ -421,9 +429,9 @@ if (isset($_GET['logout'])) {
         .modal-content {
             background: white;
             border-radius: 1rem;
-            padding: 2rem;
+            padding: 1.5rem;
             max-width: 500px;
-            width: 90%;
+            width: 100%;
             max-height: 90vh;
             overflow-y: auto;
         }
@@ -432,21 +440,56 @@ if (isset($_GET['logout'])) {
             background: #1f2937;
             color: white;
         }
+        
+        /* Responsive table styles */
+        .table-container {
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+        
+        @media (max-width: 640px) {
+            .stats-grid {
+                grid-template-columns: repeat(1, 1fr);
+            }
+            
+            .header-content {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 1rem;
+            }
+            
+            .header-actions {
+                width: 100%;
+                justify-content: space-between;
+            }
+            
+            .search-box {
+                width: 100%;
+                max-width: 100%;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .modal-content {
+                padding: 1rem;
+                margin: 1rem;
+            }
+            
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .charts-grid {
+                grid-template-columns: 1fr;
+            }
+        }
     </style>
 </head>
-<body class="bg-gray-50 dark:bg-gray-900 transition-colors duration-300">
+<body class="bg-gray-900 transition-colors duration-300">
     <!-- Mobile Menu Button -->
     <div class="lg:hidden fixed top-4 left-4 z-50">
         <button id="mobile-menu-button" class="bg-white dark:bg-gray-800 p-3 rounded-xl shadow-lg hover-lift">
             <i class="fas fa-bars text-gray-700 dark:text-gray-200"></i>
-        </button>
-    </div>
-
-    <!-- Dark Mode Toggle -->
-    <div class="fixed top-4 right-4 z-50">
-        <button id="dark-mode-toggle" class="bg-white dark:bg-gray-800 p-3 rounded-xl shadow-lg hover-lift">
-            <i class="fas fa-moon text-gray-700 dark:text-yellow-400" id="dark-icon"></i>
-            <i class="fas fa-sun text-gray-700 dark:text-yellow-400 hidden" id="light-icon"></i>
         </button>
     </div>
 
@@ -520,16 +563,19 @@ if (isset($_GET['logout'])) {
         </div>
     </div>
 
+    <!-- Mobile Menu Overlay -->
+    <div id="mobile-overlay" class="fixed inset-0 bg-black bg-opacity-50 z-30 hidden lg:hidden"></div>
+
     <!-- Main Content -->
     <div class="main-content lg:ml-64 transition-all duration-300">
         <!-- Top Bar -->
         <header class="bg-white dark:bg-gray-800 shadow-sm border-b border-gray-200 dark:border-gray-700 py-4 px-6">
-            <div class="flex justify-between items-center">
-                <div>
-                    <h1 class="text-2xl font-bold text-gray-800 dark:text-white">Dashboard</h1>
+            <div class="header-content flex flex-col md:flex-row md:justify-between md:items-center gap-4">
+                <div class="ml-16 lg:ml-0">
+                    <h1 class="text-xl md:text-2xl font-bold text-gray-800 dark:text-white">Dashboard</h1>
                     <p class="text-gray-600 dark:text-gray-400">Welcome back, <?= htmlspecialchars($_SESSION['admin_username']); ?>!</p>
                 </div>
-                <div class="flex items-center space-x-6">
+                <div class="header-actions flex items-center space-x-4 md:space-x-6">
                     <!-- Notifications -->
                     <div class="relative">
                         <button class="p-2 rounded-full bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 hover-lift">
@@ -539,8 +585,8 @@ if (isset($_GET['logout'])) {
                     </div>
                     
                     <!-- Search -->
-                    <div class="relative">
-                        <input type="text" placeholder="Search..." class="pl-10 pr-4 py-2 rounded-xl bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-indigo-500 w-64">
+                    <div class="relative search-box">
+                        <input type="text" placeholder="Search..." class="pl-10 pr-4 py-2 rounded-xl bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-indigo-500 w-full md:w-64">
                         <i class="fas fa-search absolute left-3 top-3 text-gray-500"></i>
                     </div>
                     
@@ -571,77 +617,77 @@ if (isset($_GET['logout'])) {
         <?php endif; ?>
 
         <!-- Stats Section -->
-        <div class="p-6">
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+        <div class="p-4 md:p-6">
+            <div class="stats-grid grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6 mb-6 md:mb-8">
                 <!-- Total Students -->
-                <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-6 border-l-4 border-indigo-500 hover-lift">
+                <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-4 md:p-6 border-l-4 border-indigo-500 hover-lift">
                     <div class="flex items-center justify-between">
                         <div>
                             <p class="text-sm font-medium text-gray-600 dark:text-gray-400">Total Students</p>
-                            <p class="text-3xl font-bold text-gray-800 dark:text-white"><?= $total_students; ?></p>
+                            <p class="text-2xl md:text-3xl font-bold text-gray-800 dark:text-white"><?= $total_students; ?></p>
                             <div class="flex items-center mt-2">
                                 <span class="text-green-500 text-sm flex items-center">
                                     <i class="fas fa-arrow-up mr-1"></i> 12%
                                 </span>
-                                <span class="text-gray-500 text-sm ml-2">from last month</span>
+                                <span class="text-gray-500 text-sm ml-2 hidden md:inline">from last month</span>
                             </div>
                         </div>
-                        <div class="w-14 h-14 bg-indigo-100 dark:bg-indigo-900 rounded-xl flex items-center justify-center">
-                            <i class="fas fa-users text-indigo-600 dark:text-indigo-400 text-2xl"></i>
+                        <div class="w-12 h-12 md:w-14 md:h-14 bg-indigo-100 dark:bg-indigo-900 rounded-xl flex items-center justify-center">
+                            <i class="fas fa-users text-indigo-600 dark:text-indigo-400 text-xl md:text-2xl"></i>
                         </div>
                     </div>
                 </div>
 
                 <!-- Total Rooms -->
-                <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-6 border-l-4 border-green-500 hover-lift">
+                <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-4 md:p-6 border-l-4 border-green-500 hover-lift">
                     <div class="flex items-center justify-between">
                         <div>
                             <p class="text-sm font-medium text-gray-600 dark:text-gray-400">Exam Rooms</p>
-                            <p class="text-3xl font-bold text-gray-800 dark:text-white"><?= $total_rooms; ?></p>
+                            <p class="text-2xl md:text-3xl font-bold text-gray-800 dark:text-white"><?= $total_rooms; ?></p>
                             <div class="flex items-center mt-2">
                                 <span class="text-green-500 text-sm flex items-center">
                                     <i class="fas fa-arrow-up mr-1"></i> 5%
                                 </span>
-                                <span class="text-gray-500 text-sm ml-2">from last month</span>
+                                <span class="text-gray-500 text-sm ml-2 hidden md:inline">from last month</span>
                             </div>
                         </div>
-                        <div class="w-14 h-14 bg-green-100 dark:bg-green-900 rounded-xl flex items-center justify-center">
-                            <i class="fas fa-door-open text-green-600 dark:text-green-400 text-2xl"></i>
+                        <div class="w-12 h-12 md:w-14 md:h-14 bg-green-100 dark:bg-green-900 rounded-xl flex items-center justify-center">
+                            <i class="fas fa-door-open text-green-600 dark:text-green-400 text-xl md:text-2xl"></i>
                         </div>
                     </div>
                 </div>
 
                 <!-- Departments -->
-                <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-6 border-l-4 border-purple-500 hover-lift">
+                <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-4 md:p-6 border-l-4 border-purple-500 hover-lift">
                     <div class="flex items-center justify-between">
                         <div>
                             <p class="text-sm font-medium text-gray-600 dark:text-gray-400">Departments</p>
-                            <p class="text-3xl font-bold text-gray-800 dark:text-white"><?= $total_departments; ?></p>
+                            <p class="text-2xl md:text-3xl font-bold text-gray-800 dark:text-white"><?= $total_departments; ?></p>
                             <div class="flex items-center mt-2">
                                 <span class="text-gray-500 text-sm">No change</span>
                             </div>
                         </div>
-                        <div class="w-14 h-14 bg-purple-100 dark:bg-purple-900 rounded-xl flex items-center justify-center">
-                            <i class="fas fa-university text-purple-600 dark:text-purple-400 text-2xl"></i>
+                        <div class="w-12 h-12 md:w-14 md:h-14 bg-purple-100 dark:bg-purple-900 rounded-xl flex items-center justify-center">
+                            <i class="fas fa-university text-purple-600 dark:text-purple-400 text-xl md:text-2xl"></i>
                         </div>
                     </div>
                 </div>
 
                 <!-- Seat Allocations -->
-                <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-6 border-l-4 border-orange-500 hover-lift">
+                <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-4 md:p-6 border-l-4 border-orange-500 hover-lift">
                     <div class="flex items-center justify-between">
                         <div>
                             <p class="text-sm font-medium text-gray-600 dark:text-gray-400">Seat Allocations</p>
-                            <p class="text-3xl font-bold text-gray-800 dark:text-white"><?= $total_allocations; ?></p>
+                            <p class="text-2xl md:text-3xl font-bold text-gray-800 dark:text-white"><?= $total_allocations; ?></p>
                             <div class="flex items-center mt-2">
                                 <span class="text-green-500 text-sm flex items-center">
                                     <i class="fas fa-arrow-up mr-1"></i> 24%
                                 </span>
-                                <span class="text-gray-500 text-sm ml-2">from last month</span>
+                                <span class="text-gray-500 text-sm ml-2 hidden md:inline">from last month</span>
                             </div>
                         </div>
-                        <div class="w-14 h-14 bg-orange-100 dark:bg-orange-900 rounded-xl flex items-center justify-center">
-                            <i class="fas fa-chair text-orange-600 dark:text-orange-400 text-2xl"></i>
+                        <div class="w-12 h-12 md:w-14 md:h-14 bg-orange-100 dark:bg-orange-900 rounded-xl flex items-center justify-center">
+                            <i class="fas fa-chair text-orange-600 dark:text-orange-400 text-xl md:text-2xl"></i>
                         </div>
                     </div>
                 </div>
@@ -651,33 +697,33 @@ if (isset($_GET['logout'])) {
             <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-lg overflow-hidden">
                 <!-- Dashboard Tab -->
                 <div id="dashboard" class="tab-content active">
-                    <div class="p-6">
-                        <div class="flex justify-between items-center mb-6">
+                    <div class="p-4 md:p-6">
+                        <div class="flex flex-col md:flex-row md:justify-between md:items-center mb-6 gap-4">
                             <h3 class="text-xl font-bold text-gray-800 dark:text-white">Overview</h3>
-                            <div class="flex space-x-2">
-                                <button class="bg-indigo-100 dark:bg-indigo-900 text-indigo-600 dark:text-indigo-400 px-4 py-2 rounded-xl hover:bg-indigo-200 dark:hover:bg-indigo-800">
+                            <div class="flex flex-wrap gap-2">
+                                <button class="bg-indigo-100 dark:bg-indigo-900 text-indigo-600 dark:text-indigo-400 px-3 py-2 md:px-4 md:py-2 rounded-xl hover:bg-indigo-200 dark:hover:bg-indigo-800 text-sm">
                                     <i class="fas fa-download mr-2"></i>Export
                                 </button>
-                                <button class="bg-indigo-600 text-white px-4 py-2 rounded-xl hover:bg-indigo-700">
+                                <button class="bg-indigo-600 text-white px-3 py-2 md:px-4 md:py-2 rounded-xl hover:bg-indigo-700 text-sm">
                                     <i class="fas fa-plus mr-2"></i>Generate Report
                                 </button>
                             </div>
                         </div>
 
                         <!-- Charts Section -->
-                        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+                        <div class="charts-grid grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
                             <!-- Allocation Chart -->
-                            <div class="bg-gradient-to-br from-indigo-500 to-purple-600 rounded-2xl p-6 text-white">
+                            <div class="bg-gradient-to-br from-indigo-500 to-purple-600 rounded-2xl p-4 md:p-6 text-white">
                                 <h4 class="text-lg font-semibold mb-4">Seat Allocation Status</h4>
-                                <div class="h-64">
+                                <div class="h-48 md:h-64">
                                     <canvas id="allocationChart"></canvas>
                                 </div>
                             </div>
 
                             <!-- Department Distribution -->
-                            <div class="bg-white dark:bg-gray-700 rounded-2xl p-6 shadow-lg">
+                            <div class="bg-white dark:bg-gray-700 rounded-2xl p-4 md:p-6 shadow-lg">
                                 <h4 class="text-lg font-semibold mb-4 text-gray-800 dark:text-white">Department Distribution</h4>
-                                <div class="h-64">
+                                <div class="h-48 md:h-64">
                                     <canvas id="departmentChart"></canvas>
                                 </div>
                             </div>
@@ -686,36 +732,36 @@ if (isset($_GET['logout'])) {
                         <!-- Recent Activity & Notices -->
                         <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
                             <!-- Recent Activity -->
-                            <div class="bg-white dark:bg-gray-700 rounded-2xl p-6 shadow-lg">
+                            <div class="bg-white dark:bg-gray-700 rounded-2xl p-4 md:p-6 shadow-lg">
                                 <h4 class="text-lg font-semibold mb-4 text-gray-800 dark:text-white">Recent Activity</h4>
                                 <div class="space-y-4">
                                     <div class="flex items-start space-x-3 p-3 bg-blue-50 dark:bg-blue-900/20 rounded-xl">
-                                        <div class="w-10 h-10 bg-blue-100 dark:bg-blue-800 rounded-lg flex items-center justify-center">
+                                        <div class="w-10 h-10 bg-blue-100 dark:bg-blue-800 rounded-lg flex items-center justify-center flex-shrink-0">
                                             <i class="fas fa-user-plus text-blue-600 dark:text-blue-400"></i>
                                         </div>
-                                        <div>
-                                            <p class="font-medium text-gray-800 dark:text-white">New student registered</p>
-                                            <p class="text-sm text-gray-600 dark:text-gray-400">Saykot (Roll: 743738) added to Computer Science</p>
+                                        <div class="min-w-0 flex-1">
+                                            <p class="font-medium text-gray-800 dark:text-white truncate">New student registered</p>
+                                            <p class="text-sm text-gray-600 dark:text-gray-400 truncate">Saykot (Roll: 743738) added to Computer Science</p>
                                             <p class="text-xs text-gray-500 dark:text-gray-500 mt-1">2 hours ago</p>
                                         </div>
                                     </div>
                                     <div class="flex items-start space-x-3 p-3 bg-green-50 dark:bg-green-900/20 rounded-xl">
-                                        <div class="w-10 h-10 bg-green-100 dark:bg-green-800 rounded-lg flex items-center justify-center">
+                                        <div class="w-10 h-10 bg-green-100 dark:bg-green-800 rounded-lg flex items-center justify-center flex-shrink-0">
                                             <i class="fas fa-chair text-green-600 dark:text-green-400"></i>
                                         </div>
-                                        <div>
-                                            <p class="font-medium text-gray-800 dark:text-white">Seat allocated</p>
-                                            <p class="text-sm text-gray-600 dark:text-gray-400">Golam Rabbi assigned to Room A, Seat A-2</p>
+                                        <div class="min-w-0 flex-1">
+                                            <p class="font-medium text-gray-800 dark:text-white truncate">Seat allocated</p>
+                                            <p class="text-sm text-gray-600 dark:text-gray-400 truncate">Golam Rabbi assigned to Room A, Seat A-2</p>
                                             <p class="text-xs text-gray-500 dark:text-gray-500 mt-1">5 hours ago</p>
                                         </div>
                                     </div>
                                     <div class="flex items-start space-x-3 p-3 bg-purple-50 dark:bg-purple-900/20 rounded-xl">
-                                        <div class="w-10 h-10 bg-purple-100 dark:bg-purple-800 rounded-lg flex items-center justify-center">
+                                        <div class="w-10 h-10 bg-purple-100 dark:bg-purple-800 rounded-lg flex items-center justify-center flex-shrink-0">
                                             <i class="fas fa-bullhorn text-purple-600 dark:text-purple-400"></i>
                                         </div>
-                                        <div>
-                                            <p class="font-medium text-gray-800 dark:text-white">New notice published</p>
-                                            <p class="text-sm text-gray-600 dark:text-gray-400">Exam Schedule Published for Semester Final</p>
+                                        <div class="min-w-0 flex-1">
+                                            <p class="font-medium text-gray-800 dark:text-white truncate">New notice published</p>
+                                            <p class="text-sm text-gray-600 dark:text-gray-400 truncate">Exam Schedule Published for Semester Final</p>
                                             <p class="text-xs text-gray-500 dark:text-gray-500 mt-1">1 day ago</p>
                                         </div>
                                     </div>
@@ -723,7 +769,7 @@ if (isset($_GET['logout'])) {
                             </div>
 
                             <!-- Quick Stats -->
-                            <div class="bg-white dark:bg-gray-700 rounded-2xl p-6 shadow-lg">
+                            <div class="bg-white dark:bg-gray-700 rounded-2xl p-4 md:p-6 shadow-lg">
                                 <h4 class="text-lg font-semibold mb-4 text-gray-800 dark:text-white">Quick Stats</h4>
                                 <div class="space-y-4">
                                     <div class="flex justify-between items-center p-4 bg-gray-50 dark:bg-gray-600 rounded-xl">
@@ -761,19 +807,19 @@ if (isset($_GET['logout'])) {
 
                 <!-- Students Tab -->
                 <div id="students" class="tab-content">
-                    <div class="p-6">
-                        <div class="flex justify-between items-center mb-6">
+                    <div class="p-4 md:p-6">
+                        <div class="flex flex-col md:flex-row md:justify-between md:items-center mb-6 gap-4">
                             <h3 class="text-xl font-bold text-gray-800 dark:text-white">Student Management</h3>
-                            <button onclick="toggleForm('studentForm')" class="bg-indigo-600 text-white px-4 py-2 rounded-xl hover:bg-indigo-700 flex items-center">
+                            <button onclick="toggleForm('studentForm')" class="bg-indigo-600 text-white px-4 py-2 rounded-xl hover:bg-indigo-700 flex items-center justify-center w-full md:w-auto">
                                 <i class="fas fa-plus mr-2"></i>Add Student
                             </button>
                         </div>
 
                         <!-- Add Student Form -->
-                        <div id="studentForm" class="mb-6 p-6 bg-gray-50 dark:bg-gray-700 rounded-2xl hidden">
+                        <div id="studentForm" class="mb-6 p-4 md:p-6 bg-gray-50 dark:bg-gray-700 rounded-2xl hidden">
                             <h4 class="text-lg font-semibold mb-4 text-gray-800 dark:text-white">Add New Student</h4>
                             <form method="POST">
-                                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div class="form-grid grid grid-cols-1 md:grid-cols-2 gap-4">
                                     <div>
                                         <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Full Name</label>
                                         <input type="text" name="name" placeholder="Full Name" required class="w-full p-3 border border-gray-300 dark:border-gray-600 dark:bg-gray-800 dark:text-white rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500">
@@ -807,11 +853,11 @@ if (isset($_GET['logout'])) {
                                         <input type="text" name="phone" placeholder="Phone" class="w-full p-3 border border-gray-300 dark:border-gray-600 dark:bg-gray-800 dark:text-white rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500">
                                     </div>
                                 </div>
-                                <div class="mt-6 flex space-x-3">
-                                    <button type="submit" name="add_student" class="bg-green-600 text-white px-6 py-3 rounded-xl hover:bg-green-700 flex items-center">
+                                <div class="mt-6 flex flex-col sm:flex-row space-y-3 sm:space-y-0 sm:space-x-3">
+                                    <button type="submit" name="add_student" class="bg-green-600 text-white px-6 py-3 rounded-xl hover:bg-green-700 flex items-center justify-center">
                                         <i class="fas fa-save mr-2"></i>Save Student
                                     </button>
-                                    <button type="button" onclick="toggleForm('studentForm')" class="bg-gray-600 text-white px-6 py-3 rounded-xl hover:bg-gray-700 flex items-center">
+                                    <button type="button" onclick="toggleForm('studentForm')" class="bg-gray-600 text-white px-6 py-3 rounded-xl hover:bg-gray-700 flex items-center justify-center">
                                         <i class="fas fa-times mr-2"></i>Cancel
                                     </button>
                                 </div>
@@ -819,36 +865,36 @@ if (isset($_GET['logout'])) {
                         </div>
 
                         <!-- Students Table -->
-                        <div class="overflow-x-auto rounded-2xl shadow-lg">
-                            <table class="w-full table-auto">
+                        <div class="table-container overflow-x-auto rounded-2xl shadow-lg">
+                            <table class="w-full table-auto min-w-max">
                                 <thead>
                                     <tr class="bg-gray-50 dark:bg-gray-700">
-                                        <th class="px-6 py-4 text-left text-sm font-medium text-gray-700 dark:text-gray-300">Name</th>
-                                        <th class="px-6 py-4 text-left text-sm font-medium text-gray-700 dark:text-gray-300">Roll No</th>
-                                        <th class="px-6 py-4 text-left text-sm font-medium text-gray-700 dark:text-gray-300">Department</th>
-                                        <th class="px-6 py-4 text-left text-sm font-medium text-gray-700 dark:text-gray-300">Semester</th>
-                                        <th class="px-6 py-4 text-left text-sm font-medium text-gray-700 dark:text-gray-300">Actions</th>
+                                        <th class="px-4 py-3 md:px-6 md:py-4 text-left text-sm font-medium text-gray-700 dark:text-gray-300">Name</th>
+                                        <th class="px-4 py-3 md:px-6 md:py-4 text-left text-sm font-medium text-gray-700 dark:text-gray-300">Roll No</th>
+                                        <th class="px-4 py-3 md:px-6 md:py-4 text-left text-sm font-medium text-gray-700 dark:text-gray-300">Department</th>
+                                        <th class="px-4 py-3 md:px-6 md:py-4 text-left text-sm font-medium text-gray-700 dark:text-gray-300">Semester</th>
+                                        <th class="px-4 py-3 md:px-6 md:py-4 text-left text-sm font-medium text-gray-700 dark:text-gray-300">Actions</th>
                                     </tr>
                                 </thead>
                                 <tbody class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
                                     <?php foreach ($recent_students as $student): ?>
                                     <tr class="hover:bg-gray-50 dark:hover:bg-gray-700 transition">
-                                        <td class="px-6 py-4">
+                                        <td class="px-4 py-3 md:px-6 md:py-4">
                                             <div class="flex items-center">
-                                                <div class="w-8 h-8 bg-indigo-100 dark:bg-indigo-900 rounded-lg flex items-center justify-center mr-3">
+                                                <div class="w-8 h-8 bg-indigo-100 dark:bg-indigo-900 rounded-lg flex items-center justify-center mr-3 flex-shrink-0">
                                                     <i class="fas fa-user text-indigo-600 dark:text-indigo-400 text-sm"></i>
                                                 </div>
-                                                <span class="font-medium text-gray-800 dark:text-white"><?= htmlspecialchars($student['name']); ?></span>
+                                                <span class="font-medium text-gray-800 dark:text-white truncate"><?= htmlspecialchars($student['name']); ?></span>
                                             </div>
                                         </td>
-                                        <td class="px-6 py-4 text-gray-600 dark:text-gray-400"><?= htmlspecialchars($student['roll_no']); ?></td>
-                                        <td class="px-6 py-4">
-                                            <span class="px-3 py-1 bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-300 rounded-full text-xs font-medium">
+                                        <td class="px-4 py-3 md:px-6 md:py-4 text-gray-600 dark:text-gray-400"><?= htmlspecialchars($student['roll_no']); ?></td>
+                                        <td class="px-4 py-3 md:px-6 md:py-4">
+                                            <span class="px-3 py-1 bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-300 rounded-full text-xs font-medium truncate">
                                                 <?= htmlspecialchars($student['department']); ?>
                                             </span>
                                         </td>
-                                        <td class="px-6 py-4 text-gray-600 dark:text-gray-400"><?= htmlspecialchars($student['semester']); ?></td>
-                                        <td class="px-6 py-4">
+                                        <td class="px-4 py-3 md:px-6 md:py-4 text-gray-600 dark:text-gray-400"><?= htmlspecialchars($student['semester']); ?></td>
+                                        <td class="px-4 py-3 md:px-6 md:py-4">
                                             <div class="flex space-x-2">
                                                 <button onclick="editStudent(<?= $student['student_id']; ?>)" class="text-indigo-600 dark:text-indigo-400 hover:text-indigo-900 dark:hover:text-indigo-300 p-2 rounded-lg hover:bg-indigo-50 dark:hover:bg-indigo-900/30">
                                                     <i class="fas fa-edit"></i>
@@ -871,19 +917,19 @@ if (isset($_GET['logout'])) {
 
                 <!-- Rooms Tab -->
                 <div id="rooms" class="tab-content">
-                    <div class="p-6">
-                        <div class="flex justify-between items-center mb-6">
+                    <div class="p-4 md:p-6">
+                        <div class="flex flex-col md:flex-row md:justify-between md:items-center mb-6 gap-4">
                             <h3 class="text-xl font-bold text-gray-800 dark:text-white">Room Management</h3>
-                            <button onclick="toggleForm('roomForm')" class="bg-indigo-600 text-white px-4 py-2 rounded-xl hover:bg-indigo-700 flex items-center">
+                            <button onclick="toggleForm('roomForm')" class="bg-indigo-600 text-white px-4 py-2 rounded-xl hover:bg-indigo-700 flex items-center justify-center w-full md:w-auto">
                                 <i class="fas fa-plus mr-2"></i>Add Room
                             </button>
                         </div>
 
                         <!-- Add Room Form -->
-                        <div id="roomForm" class="mb-6 p-6 bg-gray-50 dark:bg-gray-700 rounded-2xl hidden">
+                        <div id="roomForm" class="mb-6 p-4 md:p-6 bg-gray-50 dark:bg-gray-700 rounded-2xl hidden">
                             <h4 class="text-lg font-semibold mb-4 text-gray-800 dark:text-white">Add New Room</h4>
                             <form method="POST">
-                                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div class="form-grid grid grid-cols-1 md:grid-cols-2 gap-4">
                                     <div>
                                         <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Room Name</label>
                                         <input type="text" name="room_name" placeholder="Room Name" required class="w-full p-3 border border-gray-300 dark:border-gray-600 dark:bg-gray-800 dark:text-white rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500">
@@ -901,11 +947,11 @@ if (isset($_GET['logout'])) {
                                         <input type="number" name="floor_number" placeholder="Floor Number" required class="w-full p-3 border border-gray-300 dark:border-gray-600 dark:bg-gray-800 dark:text-white rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500">
                                     </div>
                                 </div>
-                                <div class="mt-6 flex space-x-3">
-                                    <button type="submit" name="add_room" class="bg-green-600 text-white px-6 py-3 rounded-xl hover:bg-green-700 flex items-center">
+                                <div class="mt-6 flex flex-col sm:flex-row space-y-3 sm:space-y-0 sm:space-x-3">
+                                    <button type="submit" name="add_room" class="bg-green-600 text-white px-6 py-3 rounded-xl hover:bg-green-700 flex items-center justify-center">
                                         <i class="fas fa-save mr-2"></i>Save Room
                                     </button>
-                                    <button type="button" onclick="toggleForm('roomForm')" class="bg-gray-600 text-white px-6 py-3 rounded-xl hover:bg-gray-700 flex items-center">
+                                    <button type="button" onclick="toggleForm('roomForm')" class="bg-gray-600 text-white px-6 py-3 rounded-xl hover:bg-gray-700 flex items-center justify-center">
                                         <i class="fas fa-times mr-2"></i>Cancel
                                     </button>
                                 </div>
@@ -913,36 +959,36 @@ if (isset($_GET['logout'])) {
                         </div>
 
                         <!-- Rooms Table -->
-                        <div class="overflow-x-auto rounded-2xl shadow-lg">
-                            <table class="w-full table-auto">
+                        <div class="table-container overflow-x-auto rounded-2xl shadow-lg">
+                            <table class="w-full table-auto min-w-max">
                                 <thead>
                                     <tr class="bg-gray-50 dark:bg-gray-700">
-                                        <th class="px-6 py-4 text-left text-sm font-medium text-gray-700 dark:text-gray-300">Room Name</th>
-                                        <th class="px-6 py-4 text-left text-sm font-medium text-gray-700 dark:text-gray-300">Building</th>
-                                        <th class="px-6 py-4 text-left text-sm font-medium text-gray-700 dark:text-gray-300">Floor</th>
-                                        <th class="px-6 py-4 text-left text-sm font-medium text-gray-700 dark:text-gray-300">Capacity</th>
-                                        <th class="px-6 py-4 text-left text-sm font-medium text-gray-700 dark:text-gray-300">Actions</th>
+                                        <th class="px-4 py-3 md:px-6 md:py-4 text-left text-sm font-medium text-gray-700 dark:text-gray-300">Room Name</th>
+                                        <th class="px-4 py-3 md:px-6 md:py-4 text-left text-sm font-medium text-gray-700 dark:text-gray-300">Building</th>
+                                        <th class="px-4 py-3 md:px-6 md:py-4 text-left text-sm font-medium text-gray-700 dark:text-gray-300">Floor</th>
+                                        <th class="px-4 py-3 md:px-6 md:py-4 text-left text-sm font-medium text-gray-700 dark:text-gray-300">Capacity</th>
+                                        <th class="px-4 py-3 md:px-6 md:py-4 text-left text-sm font-medium text-gray-700 dark:text-gray-300">Actions</th>
                                     </tr>
                                 </thead>
                                 <tbody class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
                                     <?php foreach ($rooms as $room): ?>
                                     <tr class="hover:bg-gray-50 dark:hover:bg-gray-700 transition">
-                                        <td class="px-6 py-4">
+                                        <td class="px-4 py-3 md:px-6 md:py-4">
                                             <div class="flex items-center">
-                                                <div class="w-8 h-8 bg-green-100 dark:bg-green-900 rounded-lg flex items-center justify-center mr-3">
+                                                <div class="w-8 h-8 bg-green-100 dark:bg-green-900 rounded-lg flex items-center justify-center mr-3 flex-shrink-0">
                                                     <i class="fas fa-door-open text-green-600 dark:text-green-400 text-sm"></i>
                                                 </div>
-                                                <span class="font-medium text-gray-800 dark:text-white"><?= htmlspecialchars($room['room_name']); ?></span>
+                                                <span class="font-medium text-gray-800 dark:text-white truncate"><?= htmlspecialchars($room['room_name']); ?></span>
                                             </div>
                                         </td>
-                                        <td class="px-6 py-4 text-gray-600 dark:text-gray-400"><?= htmlspecialchars($room['building_name']); ?></td>
-                                        <td class="px-6 py-4 text-gray-600 dark:text-gray-400"><?= htmlspecialchars($room['floor_number']); ?></td>
-                                        <td class="px-6 py-4">
+                                        <td class="px-4 py-3 md:px-6 md:py-4 text-gray-600 dark:text-gray-400"><?= htmlspecialchars($room['building_name']); ?></td>
+                                        <td class="px-4 py-3 md:px-6 md:py-4 text-gray-600 dark:text-gray-400"><?= htmlspecialchars($room['floor_number']); ?></td>
+                                        <td class="px-4 py-3 md:px-6 md:py-4">
                                             <span class="px-3 py-1 bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-300 rounded-full text-xs font-medium">
                                                 <?= htmlspecialchars($room['capacity']); ?> seats
                                             </span>
                                         </td>
-                                        <td class="px-6 py-4">
+                                        <td class="px-4 py-3 md:px-6 md:py-4">
                                             <div class="flex space-x-2">
                                                 <button onclick="editRoom(<?= $room['room_id']; ?>)" class="text-indigo-600 dark:text-indigo-400 hover:text-indigo-900 dark:hover:text-indigo-300 p-2 rounded-lg hover:bg-indigo-50 dark:hover:bg-indigo-900/30">
                                                     <i class="fas fa-edit"></i>
@@ -965,16 +1011,16 @@ if (isset($_GET['logout'])) {
 
                 <!-- Departments Tab -->
                 <div id="departments" class="tab-content">
-                    <div class="p-6">
-                        <div class="flex justify-between items-center mb-6">
+                    <div class="p-4 md:p-6">
+                        <div class="flex flex-col md:flex-row md:justify-between md:items-center mb-6 gap-4">
                             <h3 class="text-xl font-bold text-gray-800 dark:text-white">Department Management</h3>
-                            <button onclick="toggleForm('departmentForm')" class="bg-indigo-600 text-white px-4 py-2 rounded-xl hover:bg-indigo-700 flex items-center">
+                            <button onclick="toggleForm('departmentForm')" class="bg-indigo-600 text-white px-4 py-2 rounded-xl hover:bg-indigo-700 flex items-center justify-center w-full md:w-auto">
                                 <i class="fas fa-plus mr-2"></i>Add Department
                             </button>
                         </div>
 
                         <!-- Add Department Form -->
-                        <div id="departmentForm" class="mb-6 p-6 bg-gray-50 dark:bg-gray-700 rounded-2xl hidden">
+                        <div id="departmentForm" class="mb-6 p-4 md:p-6 bg-gray-50 dark:bg-gray-700 rounded-2xl hidden">
                             <h4 class="text-lg font-semibold mb-4 text-gray-800 dark:text-white">Add New Department</h4>
                             <form method="POST">
                                 <div class="grid grid-cols-1 gap-4">
@@ -991,11 +1037,11 @@ if (isset($_GET['logout'])) {
                                         <input type="email" name="contact_email" placeholder="Contact Email" required class="w-full p-3 border border-gray-300 dark:border-gray-600 dark:bg-gray-800 dark:text-white rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500">
                                     </div>
                                 </div>
-                                <div class="mt-6 flex space-x-3">
-                                    <button type="submit" name="add_department" class="bg-green-600 text-white px-6 py-3 rounded-xl hover:bg-green-700 flex items-center">
+                                <div class="mt-6 flex flex-col sm:flex-row space-y-3 sm:space-y-0 sm:space-x-3">
+                                    <button type="submit" name="add_department" class="bg-green-600 text-white px-6 py-3 rounded-xl hover:bg-green-700 flex items-center justify-center">
                                         <i class="fas fa-save mr-2"></i>Save Department
                                     </button>
-                                    <button type="button" onclick="toggleForm('departmentForm')" class="bg-gray-600 text-white px-6 py-3 rounded-xl hover:bg-gray-700 flex items-center">
+                                    <button type="button" onclick="toggleForm('departmentForm')" class="bg-gray-600 text-white px-6 py-3 rounded-xl hover:bg-gray-700 flex items-center justify-center">
                                         <i class="fas fa-times mr-2"></i>Cancel
                                     </button>
                                 </div>
@@ -1003,30 +1049,30 @@ if (isset($_GET['logout'])) {
                         </div>
 
                         <!-- Departments Table -->
-                        <div class="overflow-x-auto rounded-2xl shadow-lg">
-                            <table class="w-full table-auto">
+                        <div class="table-container overflow-x-auto rounded-2xl shadow-lg">
+                            <table class="w-full table-auto min-w-max">
                                 <thead>
                                     <tr class="bg-gray-50 dark:bg-gray-700">
-                                        <th class="px-6 py-4 text-left text-sm font-medium text-gray-700 dark:text-gray-300">Department Name</th>
-                                        <th class="px-6 py-4 text-left text-sm font-medium text-gray-700 dark:text-gray-300">Head of Department</th>
-                                        <th class="px-6 py-4 text-left text-sm font-medium text-gray-700 dark:text-gray-300">Contact Email</th>
-                                        <th class="px-6 py-4 text-left text-sm font-medium text-gray-700 dark:text-gray-300">Actions</th>
+                                        <th class="px-4 py-3 md:px-6 md:py-4 text-left text-sm font-medium text-gray-700 dark:text-gray-300">Department Name</th>
+                                        <th class="px-4 py-3 md:px-6 md:py-4 text-left text-sm font-medium text-gray-700 dark:text-gray-300">Head of Department</th>
+                                        <th class="px-4 py-3 md:px-6 md:py-4 text-left text-sm font-medium text-gray-700 dark:text-gray-300">Contact Email</th>
+                                        <th class="px-4 py-3 md:px-6 md:py-4 text-left text-sm font-medium text-gray-700 dark:text-gray-300">Actions</th>
                                     </tr>
                                 </thead>
                                 <tbody class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
                                     <?php foreach ($departments as $dept): ?>
                                     <tr class="hover:bg-gray-50 dark:hover:bg-gray-700 transition">
-                                        <td class="px-6 py-4">
+                                        <td class="px-4 py-3 md:px-6 md:py-4">
                                             <div class="flex items-center">
-                                                <div class="w-8 h-8 bg-purple-100 dark:bg-purple-900 rounded-lg flex items-center justify-center mr-3">
+                                                <div class="w-8 h-8 bg-purple-100 dark:bg-purple-900 rounded-lg flex items-center justify-center mr-3 flex-shrink-0">
                                                     <i class="fas fa-university text-purple-600 dark:text-purple-400 text-sm"></i>
                                                 </div>
-                                                <span class="font-medium text-gray-800 dark:text-white"><?= htmlspecialchars($dept['dept_name']); ?></span>
+                                                <span class="font-medium text-gray-800 dark:text-white truncate"><?= htmlspecialchars($dept['dept_name']); ?></span>
                                             </div>
                                         </td>
-                                        <td class="px-6 py-4 text-gray-600 dark:text-gray-400"><?= htmlspecialchars($dept['head_name']); ?></td>
-                                        <td class="px-6 py-4 text-gray-600 dark:text-gray-400"><?= htmlspecialchars($dept['contact_email']); ?></td>
-                                        <td class="px-6 py-4">
+                                        <td class="px-4 py-3 md:px-6 md:py-4 text-gray-600 dark:text-gray-400"><?= htmlspecialchars($dept['head_name']); ?></td>
+                                        <td class="px-4 py-3 md:px-6 md:py-4 text-gray-600 dark:text-gray-400"><?= htmlspecialchars($dept['contact_email']); ?></td>
+                                        <td class="px-4 py-3 md:px-6 md:py-4">
                                             <div class="flex space-x-2">
                                                 <button onclick="editDepartment(<?= $dept['dept_id']; ?>)" class="text-indigo-600 dark:text-indigo-400 hover:text-indigo-900 dark:hover:text-indigo-300 p-2 rounded-lg hover:bg-indigo-50 dark:hover:bg-indigo-900/30">
                                                     <i class="fas fa-edit"></i>
@@ -1049,19 +1095,19 @@ if (isset($_GET['logout'])) {
 
                 <!-- Allocations Tab -->
                 <div id="allocations" class="tab-content">
-                    <div class="p-6">
-                        <div class="flex justify-between items-center mb-6">
+                    <div class="p-4 md:p-6">
+                        <div class="flex flex-col md:flex-row md:justify-between md:items-center mb-6 gap-4">
                             <h3 class="text-xl font-bold text-gray-800 dark:text-white">Seat Allocation Management</h3>
-                            <button onclick="toggleForm('allocationForm')" class="bg-indigo-600 text-white px-4 py-2 rounded-xl hover:bg-indigo-700 flex items-center">
+                            <button onclick="toggleForm('allocationForm')" class="bg-indigo-600 text-white px-4 py-2 rounded-xl hover:bg-indigo-700 flex items-center justify-center w-full md:w-auto">
                                 <i class="fas fa-plus mr-2"></i>Allocate Seat
                             </button>
                         </div>
 
                         <!-- Allocate Seat Form -->
-                        <div id="allocationForm" class="mb-6 p-6 bg-gray-50 dark:bg-gray-700 rounded-2xl hidden">
+                        <div id="allocationForm" class="mb-6 p-4 md:p-6 bg-gray-50 dark:bg-gray-700 rounded-2xl hidden">
                             <h4 class="text-lg font-semibold mb-4 text-gray-800 dark:text-white">Allocate Seat to Student</h4>
                             <form method="POST">
-                                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div class="form-grid grid grid-cols-1 md:grid-cols-2 gap-4">
                                     <div>
                                         <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Student</label>
                                         <select name="student_id" required class="w-full p-3 border border-gray-300 dark:border-gray-600 dark:bg-gray-800 dark:text-white rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500">
@@ -1089,11 +1135,11 @@ if (isset($_GET['logout'])) {
                                         <input type="text" name="seat_number" placeholder="Seat Number (e.g., A-1)" required class="w-full p-3 border border-gray-300 dark:border-gray-600 dark:bg-gray-800 dark:text-white rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500">
                                     </div>
                                 </div>
-                                <div class="mt-6 flex space-x-3">
-                                    <button type="submit" name="allocate_seat" class="bg-green-600 text-white px-6 py-3 rounded-xl hover:bg-green-700 flex items-center">
+                                <div class="mt-6 flex flex-col sm:flex-row space-y-3 sm:space-y-0 sm:space-x-3">
+                                    <button type="submit" name="allocate_seat" class="bg-green-600 text-white px-6 py-3 rounded-xl hover:bg-green-700 flex items-center justify-center">
                                         <i class="fas fa-save mr-2"></i>Allocate Seat
                                     </button>
-                                    <button type="button" onclick="toggleForm('allocationForm')" class="bg-gray-600 text-white px-6 py-3 rounded-xl hover:bg-gray-700 flex items-center">
+                                    <button type="button" onclick="toggleForm('allocationForm')" class="bg-gray-600 text-white px-6 py-3 rounded-xl hover:bg-gray-700 flex items-center justify-center">
                                         <i class="fas fa-times mr-2"></i>Cancel
                                     </button>
                                 </div>
@@ -1101,42 +1147,42 @@ if (isset($_GET['logout'])) {
                         </div>
 
                         <!-- Allocations Table -->
-                        <div class="overflow-x-auto rounded-2xl shadow-lg">
-                            <table class="w-full table-auto">
+                        <div class="table-container overflow-x-auto rounded-2xl shadow-lg">
+                            <table class="w-full table-auto min-w-max">
                                 <thead>
                                     <tr class="bg-gray-50 dark:bg-gray-700">
-                                        <th class="px-6 py-4 text-left text-sm font-medium text-gray-700 dark:text-gray-300">Student Name</th>
-                                        <th class="px-6 py-4 text-left text-sm font-medium text-gray-700 dark:text-gray-300">Roll No</th>
-                                        <th class="px-6 py-4 text-left text-sm font-medium text-gray-700 dark:text-gray-300">Room</th>
-                                        <th class="px-6 py-4 text-left text-sm font-medium text-gray-700 dark:text-gray-300">Seat Number</th>
-                                        <th class="px-6 py-4 text-left text-sm font-medium text-gray-700 dark:text-gray-300">Allocated At</th>
-                                        <th class="px-6 py-4 text-left text-sm font-medium text-gray-700 dark:text-gray-300">Actions</th>
+                                        <th class="px-4 py-3 md:px-6 md:py-4 text-left text-sm font-medium text-gray-700 dark:text-gray-300">Student Name</th>
+                                        <th class="px-4 py-3 md:px-6 md:py-4 text-left text-sm font-medium text-gray-700 dark:text-gray-300">Roll No</th>
+                                        <th class="px-4 py-3 md:px-6 md:py-4 text-left text-sm font-medium text-gray-700 dark:text-gray-300">Room</th>
+                                        <th class="px-4 py-3 md:px-6 md:py-4 text-left text-sm font-medium text-gray-700 dark:text-gray-300">Seat Number</th>
+                                        <th class="px-4 py-3 md:px-6 md:py-4 text-left text-sm font-medium text-gray-700 dark:text-gray-300">Allocated At</th>
+                                        <th class="px-4 py-3 md:px-6 md:py-4 text-left text-sm font-medium text-gray-700 dark:text-gray-300">Actions</th>
                                     </tr>
                                 </thead>
                                 <tbody class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
                                     <?php foreach ($allocations as $alloc): ?>
                                     <tr class="hover:bg-gray-50 dark:hover:bg-gray-700 transition">
-                                        <td class="px-6 py-4">
+                                        <td class="px-4 py-3 md:px-6 md:py-4">
                                             <div class="flex items-center">
-                                                <div class="w-8 h-8 bg-orange-100 dark:bg-orange-900 rounded-lg flex items-center justify-center mr-3">
+                                                <div class="w-8 h-8 bg-orange-100 dark:bg-orange-900 rounded-lg flex items-center justify-center mr-3 flex-shrink-0">
                                                     <i class="fas fa-user text-orange-600 dark:text-orange-400 text-sm"></i>
                                                 </div>
-                                                <span class="font-medium text-gray-800 dark:text-white"><?= htmlspecialchars($alloc['name']); ?></span>
+                                                <span class="font-medium text-gray-800 dark:text-white truncate"><?= htmlspecialchars($alloc['name']); ?></span>
                                             </div>
                                         </td>
-                                        <td class="px-6 py-4 text-gray-600 dark:text-gray-400"><?= htmlspecialchars($alloc['roll_no']); ?></td>
-                                        <td class="px-6 py-4">
-                                            <span class="px-3 py-1 bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-300 rounded-full text-xs font-medium">
+                                        <td class="px-4 py-3 md:px-6 md:py-4 text-gray-600 dark:text-gray-400"><?= htmlspecialchars($alloc['roll_no']); ?></td>
+                                        <td class="px-4 py-3 md:px-6 md:py-4">
+                                            <span class="px-3 py-1 bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-300 rounded-full text-xs font-medium truncate">
                                                 <?= htmlspecialchars($alloc['room_name']); ?>
                                             </span>
                                         </td>
-                                        <td class="px-6 py-4">
+                                        <td class="px-4 py-3 md:px-6 md:py-4">
                                             <span class="px-3 py-1 bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-300 rounded-full text-xs font-medium">
                                                 <?= htmlspecialchars($alloc['seat_number']); ?>
                                             </span>
                                         </td>
-                                        <td class="px-6 py-4 text-gray-600 dark:text-gray-400"><?= date('M j, Y', strtotime($alloc['allocated_at'])); ?></td>
-                                        <td class="px-6 py-4">
+                                        <td class="px-4 py-3 md:px-6 md:py-4 text-gray-600 dark:text-gray-400"><?= date('M j, Y', strtotime($alloc['allocated_at'])); ?></td>
+                                        <td class="px-4 py-3 md:px-6 md:py-4">
                                             <div class="flex space-x-2">
                                                 <button onclick="viewAllocation(<?= $alloc['allocation_id']; ?>)" class="text-green-600 dark:text-green-400 hover:text-green-900 dark:hover:text-green-300 p-2 rounded-lg hover:bg-green-50 dark:hover:bg-green-900/30">
                                                     <i class="fas fa-eye"></i>
@@ -1156,16 +1202,16 @@ if (isset($_GET['logout'])) {
 
                 <!-- Notices Tab -->
                 <div id="notices" class="tab-content">
-                    <div class="p-6">
-                        <div class="flex justify-between items-center mb-6">
+                    <div class="p-4 md:p-6">
+                        <div class="flex flex-col md:flex-row md:justify-between md:items-center mb-6 gap-4">
                             <h3 class="text-xl font-bold text-gray-800 dark:text-white">Notice Management</h3>
-                            <button onclick="toggleForm('noticeForm')" class="bg-indigo-600 text-white px-4 py-2 rounded-xl hover:bg-indigo-700 flex items-center">
+                            <button onclick="toggleForm('noticeForm')" class="bg-indigo-600 text-white px-4 py-2 rounded-xl hover:bg-indigo-700 flex items-center justify-center w-full md:w-auto">
                                 <i class="fas fa-plus mr-2"></i>Add Notice
                             </button>
                         </div>
 
                         <!-- Add Notice Form -->
-                        <div id="noticeForm" class="mb-6 p-6 bg-gray-50 dark:bg-gray-700 rounded-2xl hidden">
+                        <div id="noticeForm" class="mb-6 p-4 md:p-6 bg-gray-50 dark:bg-gray-700 rounded-2xl hidden">
                             <h4 class="text-lg font-semibold mb-4 text-gray-800 dark:text-white">Add New Notice</h4>
                             <form method="POST">
                                 <div class="grid grid-cols-1 gap-4">
@@ -1178,11 +1224,11 @@ if (isset($_GET['logout'])) {
                                         <textarea name="description" placeholder="Notice Description" required rows="4" class="w-full p-3 border border-gray-300 dark:border-gray-600 dark:bg-gray-800 dark:text-white rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"></textarea>
                                     </div>
                                 </div>
-                                <div class="mt-6 flex space-x-3">
-                                    <button type="submit" name="add_notice" class="bg-green-600 text-white px-6 py-3 rounded-xl hover:bg-green-700 flex items-center">
+                                <div class="mt-6 flex flex-col sm:flex-row space-y-3 sm:space-y-0 sm:space-x-3">
+                                    <button type="submit" name="add_notice" class="bg-green-600 text-white px-6 py-3 rounded-xl hover:bg-green-700 flex items-center justify-center">
                                         <i class="fas fa-save mr-2"></i>Publish Notice
                                     </button>
-                                    <button type="button" onclick="toggleForm('noticeForm')" class="bg-gray-600 text-white px-6 py-3 rounded-xl hover:bg-gray-700 flex items-center">
+                                    <button type="button" onclick="toggleForm('noticeForm')" class="bg-gray-600 text-white px-6 py-3 rounded-xl hover:bg-gray-700 flex items-center justify-center">
                                         <i class="fas fa-times mr-2"></i>Cancel
                                     </button>
                                 </div>
@@ -1190,30 +1236,30 @@ if (isset($_GET['logout'])) {
                         </div>
 
                         <!-- Notices Table -->
-                        <div class="overflow-x-auto rounded-2xl shadow-lg">
-                            <table class="w-full table-auto">
+                        <div class="table-container overflow-x-auto rounded-2xl shadow-lg">
+                            <table class="w-full table-auto min-w-max">
                                 <thead>
                                     <tr class="bg-gray-50 dark:bg-gray-700">
-                                        <th class="px-6 py-4 text-left text-sm font-medium text-gray-700 dark:text-gray-300">Title</th>
-                                        <th class="px-6 py-4 text-left text-sm font-medium text-gray-700 dark:text-gray-300">Description</th>
-                                        <th class="px-6 py-4 text-left text-sm font-medium text-gray-700 dark:text-gray-300">Posted At</th>
-                                        <th class="px-6 py-4 text-left text-sm font-medium text-gray-700 dark:text-gray-300">Actions</th>
+                                        <th class="px-4 py-3 md:px-6 md:py-4 text-left text-sm font-medium text-gray-700 dark:text-gray-300">Title</th>
+                                        <th class="px-4 py-3 md:px-6 md:py-4 text-left text-sm font-medium text-gray-700 dark:text-gray-300">Description</th>
+                                        <th class="px-4 py-3 md:px-6 md:py-4 text-left text-sm font-medium text-gray-700 dark:text-gray-300">Posted At</th>
+                                        <th class="px-4 py-3 md:px-6 md:py-4 text-left text-sm font-medium text-gray-700 dark:text-gray-300">Actions</th>
                                     </tr>
                                 </thead>
                                 <tbody class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
                                     <?php foreach ($recent_notices as $notice): ?>
                                     <tr class="hover:bg-gray-50 dark:hover:bg-gray-700 transition">
-                                        <td class="px-6 py-4">
+                                        <td class="px-4 py-3 md:px-6 md:py-4">
                                             <div class="flex items-center">
-                                                <div class="w-8 h-8 bg-red-100 dark:bg-red-900 rounded-lg flex items-center justify-center mr-3">
+                                                <div class="w-8 h-8 bg-red-100 dark:bg-red-900 rounded-lg flex items-center justify-center mr-3 flex-shrink-0">
                                                     <i class="fas fa-bullhorn text-red-600 dark:text-red-400 text-sm"></i>
                                                 </div>
-                                                <span class="font-medium text-gray-800 dark:text-white"><?= htmlspecialchars($notice['title']); ?></span>
+                                                <span class="font-medium text-gray-800 dark:text-white truncate"><?= htmlspecialchars($notice['title']); ?></span>
                                             </div>
                                         </td>
-                                        <td class="px-6 py-4 text-gray-600 dark:text-gray-400"><?= htmlspecialchars(substr($notice['description'], 0, 100)); ?>...</td>
-                                        <td class="px-6 py-4 text-gray-600 dark:text-gray-400"><?= date('M j, Y', strtotime($notice['posted_at'])); ?></td>
-                                        <td class="px-6 py-4">
+                                        <td class="px-4 py-3 md:px-6 md:py-4 text-gray-600 dark:text-gray-400 truncate max-w-xs"><?= htmlspecialchars(substr($notice['description'], 0, 100)); ?>...</td>
+                                        <td class="px-4 py-3 md:px-6 md:py-4 text-gray-600 dark:text-gray-400"><?= date('M j, Y', strtotime($notice['posted_at'])); ?></td>
+                                        <td class="px-4 py-3 md:px-6 md:py-4">
                                             <div class="flex space-x-2">
                                                 <button onclick="editNotice(<?= $notice['notice_id']; ?>)" class="text-indigo-600 dark:text-indigo-400 hover:text-indigo-900 dark:hover:text-indigo-300 p-2 rounded-lg hover:bg-indigo-50 dark:hover:bg-indigo-900/30">
                                                     <i class="fas fa-edit"></i>
@@ -1236,8 +1282,8 @@ if (isset($_GET['logout'])) {
 
                 <!-- Analytics Tab -->
                 <div id="analytics" class="tab-content">
-                    <div class="p-6">
-                        <div class="flex justify-between items-center mb-6">
+                    <div class="p-4 md:p-6">
+                        <div class="flex flex-col md:flex-row md:justify-between md:items-center mb-6 gap-4">
                             <h3 class="text-xl font-bold text-gray-800 dark:text-white">System Analytics</h3>
                             <div class="flex space-x-2">
                                 <select class="bg-gray-100 dark:bg-gray-700 border-0 rounded-xl px-4 py-2 text-gray-800 dark:text-white focus:ring-2 focus:ring-indigo-500">
@@ -1250,7 +1296,7 @@ if (isset($_GET['logout'])) {
 
                         <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
                             <!-- Performance Metrics -->
-                            <div class="bg-gradient-to-br from-indigo-500 to-purple-600 rounded-2xl p-6 text-white">
+                            <div class="bg-gradient-to-br from-indigo-500 to-purple-600 rounded-2xl p-4 md:p-6 text-white">
                                 <h4 class="text-lg font-semibold mb-4">System Performance</h4>
                                 <div class="space-y-4">
                                     <div class="flex justify-between items-center">
@@ -1280,46 +1326,46 @@ if (isset($_GET['logout'])) {
                             </div>
 
                             <!-- User Activity -->
-                            <div class="bg-white dark:bg-gray-700 rounded-2xl p-6 shadow-lg col-span-2">
+                            <div class="bg-white dark:bg-gray-700 rounded-2xl p-4 md:p-6 shadow-lg col-span-1 lg:col-span-2">
                                 <h4 class="text-lg font-semibold mb-4 text-gray-800 dark:text-white">User Activity Timeline</h4>
-                                <div class="h-64">
+                                <div class="h-48 md:h-64">
                                     <canvas id="activityChart"></canvas>
                                 </div>
                             </div>
                         </div>
 
                         <!-- Additional Analytics -->
-                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                            <div class="bg-white dark:bg-gray-700 rounded-2xl p-6 shadow-lg text-center">
-                                <div class="w-16 h-16 bg-green-100 dark:bg-green-900 rounded-full flex items-center justify-center mx-auto mb-4">
-                                    <i class="fas fa-check-circle text-green-600 dark:text-green-400 text-2xl"></i>
+                        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
+                            <div class="bg-white dark:bg-gray-700 rounded-2xl p-4 md:p-6 shadow-lg text-center">
+                                <div class="w-12 h-12 md:w-16 md:h-16 bg-green-100 dark:bg-green-900 rounded-full flex items-center justify-center mx-auto mb-4">
+                                    <i class="fas fa-check-circle text-green-600 dark:text-green-400 text-xl md:text-2xl"></i>
                                 </div>
-                                <h5 class="font-semibold text-gray-800 dark:text-white">Successful Operations</h5>
-                                <p class="text-3xl font-bold text-gray-800 dark:text-white mt-2">98.2%</p>
+                                <h5 class="font-semibold text-gray-800 dark:text-white text-sm md:text-base">Successful Operations</h5>
+                                <p class="text-xl md:text-3xl font-bold text-gray-800 dark:text-white mt-2">98.2%</p>
                             </div>
                             
-                            <div class="bg-white dark:bg-gray-700 rounded-2xl p-6 shadow-lg text-center">
-                                <div class="w-16 h-16 bg-blue-100 dark:bg-blue-900 rounded-full flex items-center justify-center mx-auto mb-4">
-                                    <i class="fas fa-users text-blue-600 dark:text-blue-400 text-2xl"></i>
+                            <div class="bg-white dark:bg-gray-700 rounded-2xl p-4 md:p-6 shadow-lg text-center">
+                                <div class="w-12 h-12 md:w-16 md:h-16 bg-blue-100 dark:bg-blue-900 rounded-full flex items-center justify-center mx-auto mb-4">
+                                    <i class="fas fa-users text-blue-600 dark:text-blue-400 text-xl md:text-2xl"></i>
                                 </div>
-                                <h5 class="font-semibold text-gray-800 dark:text-white">Active Users</h5>
-                                <p class="text-3xl font-bold text-gray-800 dark:text-white mt-2">142</p>
+                                <h5 class="font-semibold text-gray-800 dark:text-white text-sm md:text-base">Active Users</h5>
+                                <p class="text-xl md:text-3xl font-bold text-gray-800 dark:text-white mt-2">142</p>
                             </div>
                             
-                            <div class="bg-white dark:bg-gray-700 rounded-2xl p-6 shadow-lg text-center">
-                                <div class="w-16 h-16 bg-orange-100 dark:bg-orange-900 rounded-full flex items-center justify-center mx-auto mb-4">
-                                    <i class="fas fa-database text-orange-600 dark:text-orange-400 text-2xl"></i>
+                            <div class="bg-white dark:bg-gray-700 rounded-2xl p-4 md:p-6 shadow-lg text-center">
+                                <div class="w-12 h-12 md:w-16 md:h-16 bg-orange-100 dark:bg-orange-900 rounded-full flex items-center justify-center mx-auto mb-4">
+                                    <i class="fas fa-database text-orange-600 dark:text-orange-400 text-xl md:text-2xl"></i>
                                 </div>
-                                <h5 class="font-semibold text-gray-800 dark:text-white">Data Storage</h5>
-                                <p class="text-3xl font-bold text-gray-800 dark:text-white mt-2">2.4GB</p>
+                                <h5 class="font-semibold text-gray-800 dark:text-white text-sm md:text-base">Data Storage</h5>
+                                <p class="text-xl md:text-3xl font-bold text-gray-800 dark:text-white mt-2">2.4GB</p>
                             </div>
                             
-                            <div class="bg-white dark:bg-gray-700 rounded-2xl p-6 shadow-lg text-center">
-                                <div class="w-16 h-16 bg-purple-100 dark:bg-purple-900 rounded-full flex items-center justify-center mx-auto mb-4">
-                                    <i class="fas fa-shield-alt text-purple-600 dark:text-purple-400 text-2xl"></i>
+                            <div class="bg-white dark:bg-gray-700 rounded-2xl p-4 md:p-6 shadow-lg text-center">
+                                <div class="w-12 h-12 md:w-16 md:h-16 bg-purple-100 dark:bg-purple-900 rounded-full flex items-center justify-center mx-auto mb-4">
+                                    <i class="fas fa-shield-alt text-purple-600 dark:text-purple-400 text-xl md:text-2xl"></i>
                                 </div>
-                                <h5 class="font-semibold text-gray-800 dark:text-white">Security Score</h5>
-                                <p class="text-3xl font-bold text-gray-800 dark:text-white mt-2">96.7</p>
+                                <h5 class="font-semibold text-gray-800 dark:text-white text-sm md:text-base">Security Score</h5>
+                                <p class="text-xl md:text-3xl font-bold text-gray-800 dark:text-white mt-2">96.7</p>
                             </div>
                         </div>
                     </div>
@@ -1337,7 +1383,7 @@ if (isset($_GET['logout'])) {
                 </div>
                 <h3 class="text-xl font-bold text-gray-800 dark:text-white mb-2">Confirm Deletion</h3>
                 <p class="text-gray-600 dark:text-gray-400 mb-6" id="deleteMessage">Are you sure you want to delete this item?</p>
-                <div class="flex space-x-3 justify-center">
+                <div class="flex flex-col sm:flex-row space-y-3 sm:space-y-0 sm:space-x-3 justify-center">
                     <button id="confirmDelete" class="bg-red-600 text-white px-6 py-2 rounded-xl hover:bg-red-700">Delete</button>
                     <button onclick="closeModal('deleteModal')" class="bg-gray-600 text-white px-6 py-2 rounded-xl hover:bg-gray-700">Cancel</button>
                 </div>
@@ -1375,9 +1421,6 @@ if (isset($_GET['logout'])) {
         </div>
     </div>
 
-    <!-- Mobile Menu Overlay -->
-    <div id="mobile-overlay" class="fixed inset-0 bg-black bg-opacity-50 z-30 hidden lg:hidden"></div>
-
     <script>
         // Mobile menu functionality
         const mobileMenuButton = document.getElementById('mobile-menu-button');
@@ -1388,48 +1431,25 @@ if (isset($_GET['logout'])) {
         function openMobileMenu() {
             sidebar.classList.add('open');
             mobileOverlay.classList.remove('hidden');
-            document.body.style.overflow = 'hidden';
+            document.body.classList.add('mobile-menu-open');
+
+            // Hide menu button
+            mobileMenuButton.classList.add('hidden');
         }
 
         function closeMobileMenu() {
             sidebar.classList.remove('open');
             mobileOverlay.classList.add('hidden');
-            document.body.style.overflow = '';
+            document.body.classList.remove('mobile-menu-open');
+
+            // Show menu button again
+            mobileMenuButton.classList.remove('hidden');
         }
 
         mobileMenuButton.addEventListener('click', openMobileMenu);
         mobileOverlay.addEventListener('click', closeMobileMenu);
 
-        // Dark mode functionality
-        const darkModeToggle = document.getElementById('dark-mode-toggle');
-        const darkIcon = document.getElementById('dark-icon');
-        const lightIcon = document.getElementById('light-icon');
         
-        // Check for saved theme or prefer color scheme
-        if (localStorage.getItem('color-theme') === 'dark' || (!('color-theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
-            document.documentElement.classList.add('dark');
-            darkIcon.classList.add('hidden');
-            lightIcon.classList.remove('hidden');
-        } else {
-            document.documentElement.classList.remove('dark');
-            darkIcon.classList.remove('hidden');
-            lightIcon.classList.add('hidden');
-        }
-        
-        darkModeToggle.addEventListener('click', function() {
-            // Toggle icons
-            darkIcon.classList.toggle('hidden');
-            lightIcon.classList.toggle('hidden');
-            
-            // Toggle theme
-            if (document.documentElement.classList.contains('dark')) {
-                document.documentElement.classList.remove('dark');
-                localStorage.setItem('color-theme', 'light');
-            } else {
-                document.documentElement.classList.add('dark');
-                localStorage.setItem('color-theme', 'dark');
-            }
-        });
 
         // Tab functionality
         function showTab(tabName) {
@@ -1633,7 +1653,7 @@ if (isset($_GET['logout'])) {
                             <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Roll Number</label>
                             <input type="text" name="roll_no" value="743738" required class="w-full p-3 border border-gray-300 dark:border-gray-600 dark:bg-gray-800 dark:text-white rounded-xl">
                         </div>
-                        <div class="flex space-x-3">
+                        <div class="flex flex-col sm:flex-row space-y-3 sm:space-y-0 sm:space-x-3">
                             <button type="submit" name="edit_student" class="bg-green-600 text-white px-6 py-2 rounded-xl hover:bg-green-700">Update</button>
                             <button type="button" onclick="closeModal('editModal')" class="bg-gray-600 text-white px-6 py-2 rounded-xl hover:bg-gray-700">Cancel</button>
                         </div>
@@ -1657,7 +1677,7 @@ if (isset($_GET['logout'])) {
                             <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Capacity</label>
                             <input type="number" name="capacity" value="50" required class="w-full p-3 border border-gray-300 dark:border-gray-600 dark:bg-gray-800 dark:text-white rounded-xl">
                         </div>
-                        <div class="flex space-x-3">
+                        <div class="flex flex-col sm:flex-row space-y-3 sm:space-y-0 sm:space-x-3">
                             <button type="submit" name="edit_room" class="bg-green-600 text-white px-6 py-2 rounded-xl hover:bg-green-700">Update</button>
                             <button type="button" onclick="closeModal('editModal')" class="bg-gray-600 text-white px-6 py-2 rounded-xl hover:bg-gray-700">Cancel</button>
                         </div>
@@ -1681,7 +1701,7 @@ if (isset($_GET['logout'])) {
                             <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Head of Department</label>
                             <input type="text" name="head_name" value="Dr. A. Rahman" required class="w-full p-3 border border-gray-300 dark:border-gray-600 dark:bg-gray-800 dark:text-white rounded-xl">
                         </div>
-                        <div class="flex space-x-3">
+                        <div class="flex flex-col sm:flex-row space-y-3 sm:space-y-0 sm:space-x-3">
                             <button type="submit" name="edit_department" class="bg-green-600 text-white px-6 py-2 rounded-xl hover:bg-green-700">Update</button>
                             <button type="button" onclick="closeModal('editModal')" class="bg-gray-600 text-white px-6 py-2 rounded-xl hover:bg-gray-700">Cancel</button>
                         </div>
@@ -1705,7 +1725,7 @@ if (isset($_GET['logout'])) {
                             <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Description</label>
                             <textarea name="description" required rows="4" class="w-full p-3 border border-gray-300 dark:border-gray-600 dark:bg-gray-800 dark:text-white rounded-xl">The semester final exam schedule has been published. Please check the notice board.</textarea>
                         </div>
-                        <div class="flex space-x-3">
+                        <div class="flex flex-col sm:flex-row space-y-3 sm:space-y-0 sm:space-x-3">
                             <button type="submit" name="edit_notice" class="bg-green-600 text-white px-6 py-2 rounded-xl hover:bg-green-700">Update</button>
                             <button type="button" onclick="closeModal('editModal')" class="bg-gray-600 text-white px-6 py-2 rounded-xl hover:bg-gray-700">Cancel</button>
                         </div>
@@ -1737,143 +1757,166 @@ if (isset($_GET['logout'])) {
             });
         }, 5000);
 
+        // Chart instances
+        let allocationChart, departmentChart, activityChart;
+
         // Initialize Charts
-        document.addEventListener('DOMContentLoaded', function() {
+        function initCharts() {
             // Allocation Chart
-            const allocationCtx = document.getElementById('allocationChart').getContext('2d');
-            const allocationChart = new Chart(allocationCtx, {
-                type: 'doughnut',
-                data: {
-                    labels: ['Allocated', 'Available'],
-                    datasets: [{
-                        data: [<?= $total_allocations; ?>, <?= $total_students - $total_allocations; ?>],
-                        backgroundColor: [
-                            'rgba(99, 102, 241, 0.8)',
-                            'rgba(255, 255, 255, 0.3)'
-                        ],
-                        borderColor: [
-                            'rgba(99, 102, 241, 1)',
-                            'rgba(255, 255, 255, 0.5)'
-                        ],
-                        borderWidth: 1
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: {
-                        legend: {
-                            position: 'bottom',
-                            labels: {
-                                color: 'white',
-                                font: {
-                                    size: 12
+            const allocationCtx = document.getElementById('allocationChart');
+            if (allocationCtx) {
+                allocationChart = new Chart(allocationCtx, {
+                    type: 'doughnut',
+                    data: {
+                        labels: ['Allocated', 'Available'],
+                        datasets: [{
+                            data: [<?= $total_allocations; ?>, <?= $total_students - $total_allocations; ?>],
+                            backgroundColor: [
+                                'rgba(99, 102, 241, 0.8)',
+                                'rgba(255, 255, 255, 0.3)'
+                            ],
+                            borderColor: [
+                                'rgba(99, 102, 241, 1)',
+                                'rgba(255, 255, 255, 0.5)'
+                            ],
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                position: 'bottom',
+                                labels: {
+                                    color: 'white',
+                                    font: {
+                                        size: 12
+                                    }
                                 }
                             }
                         }
                     }
-                }
-            });
+                });
+            }
 
             // Department Chart
-            const departmentCtx = document.getElementById('departmentChart').getContext('2d');
-            const departmentChart = new Chart(departmentCtx, {
-                type: 'bar',
-                data: {
-                    labels: ['Computer Science', 'Electrical', 'Civil'],
-                    datasets: [{
-                        label: 'Students',
-                        data: [120, 80, 60],
-                        backgroundColor: [
-                            'rgba(99, 102, 241, 0.7)',
-                            'rgba(16, 185, 129, 0.7)',
-                            'rgba(245, 158, 11, 0.7)'
-                        ],
-                        borderColor: [
-                            'rgba(99, 102, 241, 1)',
-                            'rgba(16, 185, 129, 1)',
-                            'rgba(245, 158, 11, 1)'
-                        ],
-                        borderWidth: 1
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    scales: {
-                        y: {
-                            beginAtZero: true,
-                            grid: {
-                                color: 'rgba(0, 0, 0, 0.1)'
+            const departmentCtx = document.getElementById('departmentChart');
+            if (departmentCtx) {
+                const isDark = document.documentElement.classList.contains('dark');
+                departmentChart = new Chart(departmentCtx, {
+                    type: 'bar',
+                    data: {
+                        labels: ['Computer Science', 'Electrical', 'Civil'],
+                        datasets: [{
+                            label: 'Students',
+                            data: [120, 80, 60],
+                            backgroundColor: [
+                                'rgba(99, 102, 241, 0.7)',
+                                'rgba(16, 185, 129, 0.7)',
+                                'rgba(245, 158, 11, 0.7)'
+                            ],
+                            borderColor: [
+                                'rgba(99, 102, 241, 1)',
+                                'rgba(16, 185, 129, 1)',
+                                'rgba(245, 158, 11, 1)'
+                            ],
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                grid: {
+                                    color: isDark ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.1)'
+                                },
+                                ticks: {
+                                    color: isDark ? '#9CA3AF' : '#6B7280'
+                                }
                             },
-                            ticks: {
-                                color: document.documentElement.classList.contains('dark') ? '#9CA3AF' : '#6B7280'
+                            x: {
+                                grid: {
+                                    display: false
+                                },
+                                ticks: {
+                                    color: isDark ? '#9CA3AF' : '#6B7280'
+                                }
                             }
                         },
-                        x: {
-                            grid: {
+                        plugins: {
+                            legend: {
                                 display: false
-                            },
-                            ticks: {
-                                color: document.documentElement.classList.contains('dark') ? '#9CA3AF' : '#6B7280'
                             }
                         }
-                    },
-                    plugins: {
-                        legend: {
-                            display: false
-                        }
                     }
-                }
-            });
+                });
+            }
 
             // Activity Chart
-            const activityCtx = document.getElementById('activityChart').getContext('2d');
-            const activityChart = new Chart(activityCtx, {
-                type: 'line',
-                data: {
-                    labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
-                    datasets: [{
-                        label: 'User Logins',
-                        data: [65, 78, 66, 72, 80, 55, 40],
-                        borderColor: 'rgba(99, 102, 241, 1)',
-                        backgroundColor: 'rgba(99, 102, 241, 0.1)',
-                        tension: 0.4,
-                        fill: true
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    scales: {
-                        y: {
-                            beginAtZero: true,
-                            grid: {
-                                color: 'rgba(0, 0, 0, 0.1)'
+            const activityCtx = document.getElementById('activityChart');
+            if (activityCtx) {
+                const isDark = document.documentElement.classList.contains('dark');
+                activityChart = new Chart(activityCtx, {
+                    type: 'line',
+                    data: {
+                        labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+                        datasets: [{
+                            label: 'User Logins',
+                            data: [65, 78, 66, 72, 80, 55, 40],
+                            borderColor: 'rgba(99, 102, 241, 1)',
+                            backgroundColor: 'rgba(99, 102, 241, 0.1)',
+                            tension: 0.4,
+                            fill: true
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                grid: {
+                                    color: isDark ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.1)'
+                                },
+                                ticks: {
+                                    color: isDark ? '#9CA3AF' : '#6B7280'
+                                }
                             },
-                            ticks: {
-                                color: document.documentElement.classList.contains('dark') ? '#9CA3AF' : '#6B7280'
+                            x: {
+                                grid: {
+                                    display: false
+                                },
+                                ticks: {
+                                    color: isDark ? '#9CA3AF' : '#6B7280'
+                                }
                             }
                         },
-                        x: {
-                            grid: {
-                                display: false
-                            },
-                            ticks: {
-                                color: document.documentElement.classList.contains('dark') ? '#9CA3AF' : '#6B7280'
-                            }
-                        }
-                    },
-                    plugins: {
-                        legend: {
-                            labels: {
-                                color: document.documentElement.classList.contains('dark') ? '#9CA3AF' : '#6B7280'
+                        plugins: {
+                            legend: {
+                                labels: {
+                                    color: isDark ? '#9CA3AF' : '#6B7280'
+                                }
                             }
                         }
                     }
-                }
-            });
-        });
+                });
+            }
+        }
+
+        // Refresh charts when theme changes
+        function refreshCharts() {
+            if (allocationChart) allocationChart.destroy();
+            if (departmentChart) departmentChart.destroy();
+            if (activityChart) activityChart.destroy();
+            
+            initCharts();
+        }
+
+        // Initialize charts on page load
+        document.addEventListener('DOMContentLoaded', initCharts);
     </script>
 </body>
 </html>

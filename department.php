@@ -399,11 +399,11 @@ if (isset($_GET['id']) && is_numeric($_GET['id'])) {
             <div class="border-t border-gray-200 pt-6">
                 <h3 class="text-sm font-semibold text-gray-500 uppercase tracking-wider px-4 mb-4">Account</h3>
                 <div class="space-y-2">
-                    <a href="student/login.php" class="block px-4 py-3 text-gray-700 hover:bg-indigo-50 hover:text-indigo-600 rounded-xl transition-colors duration-200 flex items-center">
+                    <a href="login.php" class="block px-4 py-3 text-gray-700 hover:bg-indigo-50 hover:text-indigo-600 rounded-xl transition-colors duration-200 flex items-center">
                         <i class="fas fa-user-graduate mr-3 text-indigo-500 w-5"></i>
                         Student Login
                     </a>
-                    <a href="admin/login.php" class="block px-4 py-3 text-gray-700 hover:bg-indigo-50 hover:text-indigo-600 rounded-xl transition-colors duration-200 flex items-center">
+                    <a href="admin-login.php" class="block px-4 py-3 text-gray-700 hover:bg-indigo-50 hover:text-indigo-600 rounded-xl transition-colors duration-200 flex items-center">
                         <i class="fas fa-user-shield mr-3 text-indigo-500 w-5"></i>
                         Admin Login
                     </a>

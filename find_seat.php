@@ -5,7 +5,6 @@ $username = "root";
 $password = "";
 $database = "seatplan_management";
 
-
 $conn = new mysqli($servername, $username, $password, $database);
 if ($conn->connect_error) {
     die("Database Connection Failed: " . $conn->connect_error);
@@ -198,49 +197,95 @@ if (isset($_SESSION['show_seat_modal'])) {
             transform: rotate(-45deg) translate(6px, -6px);
         }
         
-        /* Seat Visualization */
-        .classroom {
-            display: grid;
-            grid-template-columns: repeat(5, 1fr);
-            gap: 10px;
-            max-width: 400px;
+        /* Enhanced Seat Visualization */
+        .classroom-container {
+            background: #f9fafb;
+            border-radius: 1rem;
+            padding: 1.5rem;
+            max-width: 500px;
             margin: 0 auto;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
         }
         
         .seat {
-            width: 50px;
-            height: 50px;
-            background: #e2e8f0;
-            border-radius: 8px;
+            width: 2.5rem;
+            height: 2.5rem;
+            border-radius: 0.5rem;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-weight: bold;
+            font-weight: 600;
+            font-size: 0.75rem;
             transition: all 0.3s ease;
+            cursor: pointer;
+            border: 2px solid transparent;
+        }
+        
+        @media (min-width: 768px) {
+            .seat {
+                width: 3rem;
+                height: 3rem;
+                font-size: 0.875rem;
+            }
+        }
+        
+        .seat.available {
+            background: #dcfce7;
+            border-color: #22c55e;
+            color: #166534;
         }
         
         .seat.occupied {
-            background: #fed7d7;
-            color: #c53030;
+            background: #fecaca;
+            border-color: #ef4444;
+            color: #991b1b;
         }
         
-        .seat.user-seat {
-            background: #c6f6d5;
-            color: #276749;
+        .seat.current {
+            background: #dbeafe;
+            border-color: #3b82f6;
+            color: #1e40af;
             transform: scale(1.1);
-            box-shadow: 0 0 10px rgba(72, 187, 120, 0.5);
+            box-shadow: 0 0 15px rgba(59, 130, 246, 0.5);
+            z-index: 10;
+        }
+        
+        .seat:hover {
+            transform: scale(1.05);
         }
         
         .teacher-desk {
-            grid-column: 2 / 5;
-            background: #bee3f8;
-            height: 40px;
-            border-radius: 8px;
+            background: #e5e7eb;
+            height: 2.5rem;
+            border-radius: 0.5rem;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-weight: bold;
-            margin-bottom: 20px;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            border: 2px dashed #9ca3af;
+        }
+        
+        @media (min-width: 768px) {
+            .teacher-desk {
+                height: 3rem;
+            }
+        }
+        
+        .seats-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 0.75rem;
+            margin: 0 auto;
+            max-width: 20rem;
+        }
+        
+        @media (min-width: 768px) {
+            .seats-grid {
+                grid-template-columns: repeat(5, 1fr);
+                gap: 1rem;
+                max-width: 24rem;
+            }
         }
         
         /* Stats Counter */
@@ -424,11 +469,11 @@ if (isset($_SESSION['show_seat_modal'])) {
             <div class="border-t border-gray-200 pt-6">
                 <h3 class="text-sm font-semibold text-gray-500 uppercase tracking-wider px-4 mb-4">Account</h3>
                 <div class="space-y-2">
-                    <a href="student/login.php" class="block px-4 py-3 text-gray-700 hover:bg-indigo-50 hover:text-indigo-600 rounded-xl transition-colors duration-200 flex items-center">
+                    <a href="login.php" class="block px-4 py-3 text-gray-700 hover:bg-indigo-50 hover:text-indigo-600 rounded-xl transition-colors duration-200 flex items-center">
                         <i class="fas fa-user-graduate mr-3 text-indigo-500 w-5"></i>
                         Student Login
                     </a>
-                    <a href="admin/login.php" class="block px-4 py-3 text-gray-700 hover:bg-indigo-50 hover:text-indigo-600 rounded-xl transition-colors duration-200 flex items-center">
+                    <a href="admin-login.php" class="block px-4 py-3 text-gray-700 hover:bg-indigo-50 hover:text-indigo-600 rounded-xl transition-colors duration-200 flex items-center">
                         <i class="fas fa-user-shield mr-3 text-indigo-500 w-5"></i>
                         Admin Login
                     </a>
@@ -474,12 +519,12 @@ if (isset($_SESSION['show_seat_modal'])) {
         </div>
         
         <!-- Floating Elements -->
-        <div class="absolute bottom-10 left-10 floating" data-aos="fade-right" data-aos-delay="500">
+        <div class="absolute bottom-10 left-10 floating" data-aos="fade-up" data-aos-desktop="fade-right" data-aos-delay="500">
             <div class="bg-white/20 backdrop-blur-sm rounded-full p-4">
                 <i class="fas fa-chair text-white text-2xl"></i>
             </div>
         </div>
-        <div class="absolute top-10 right-10 floating" data-aos="fade-left" data-aos-delay="700" style="animation-delay: 0.5s;">
+        <div class="absolute top-10 right-10 floating" data-aos="fade-up" data-aos-desktop="fade-left" data-aos-delay="700" style="animation-delay: 0.5s;">
             <div class="bg-white/20 backdrop-blur-sm rounded-full p-4">
                 <i class="fas fa-university text-white text-2xl"></i>
             </div>
@@ -519,6 +564,7 @@ if (isset($_SESSION['show_seat_modal'])) {
                             <option value="2021-22" <?= isset($_POST['session']) && $_POST['session'] == '2021-22' ? 'selected' : '' ?>>2021-22</option>
                             <option value="2022-23" <?= isset($_POST['session']) && $_POST['session'] == '2022-23' ? 'selected' : '' ?>>2022-23</option>
                             <option value="2023-24" <?= isset($_POST['session']) && $_POST['session'] == '2023-24' ? 'selected' : '' ?>>2023-24</option>
+                            <option value="2024-25" <?= isset($_POST['session']) && $_POST['session'] == '2024-25' ? 'selected' : '' ?>>2024-25</option>
                         </select>
                     </div>
                     <div>
@@ -531,6 +577,8 @@ if (isset($_SESSION['show_seat_modal'])) {
                             <option value="4th" <?= isset($_POST['semester']) && $_POST['semester'] == '4th' ? 'selected' : '' ?>>4th</option>
                             <option value="5th" <?= isset($_POST['semester']) && $_POST['semester'] == '5th' ? 'selected' : '' ?>>5th</option>
                             <option value="6th" <?= isset($_POST['semester']) && $_POST['semester'] == '6th' ? 'selected' : '' ?>>6th</option>
+                            <option value="7th" <?= isset($_POST['semester']) && $_POST['semester'] == '7th' ? 'selected' : '' ?>>7th</option>
+                            <option value="8th" <?= isset($_POST['semester']) && $_POST['semester'] == '8th' ? 'selected' : '' ?>>8th</option>
                         </select>
                     </div>
                     <div>
@@ -641,37 +689,52 @@ if (isset($_SESSION['show_seat_modal'])) {
                     </div>
                 </div>
                 
-                <!-- Classroom Visualization -->
+                <!-- Enhanced Classroom Visualization -->
                 <div class="mt-8">
-                    <h3 class="text-xl font-bold text-gray-800 mb-4 text-center">Classroom Layout</h3>
-                    <div class="classroom">
-                        <div class="teacher-desk">Teacher Desk</div>
-                        <?php
-                        // Generate a simple classroom layout with 20 seats
-                        $userSeat = $seat_info['seat_number'] ?? null;
-                        for ($i = 1; $i <= 20; $i++) {
-                            $seatClass = "seat";
-                            $seatNumber = "A-" . $i;
-                            
-                            // Mark the user's seat
-                            if ($userSeat && $userSeat == $seatNumber) {
-                                $seatClass .= " user-seat";
-                            } else {
-                                $seatClass .= " occupied";
-                            }
-                            
-                            echo "<div class='$seatClass'>$seatNumber</div>";
-                        }
-                        ?>
-                    </div>
-                    <div class="flex justify-center mt-4 space-x-6">
-                        <div class="flex items-center">
-                            <div class="w-4 h-4 bg-green-200 rounded mr-2"></div>
-                            <span class="text-sm text-gray-600">Your Seat</span>
+                    <h3 class="text-xl font-bold text-gray-800 mb-4 text-center">Classroom Layout - <?= htmlspecialchars($seat_info['room_name'] ?? 'Room'); ?></h3>
+                    
+                    <div class="classroom-container">
+                        <div class="text-center mb-4 md:mb-6">
+                            <div class="w-12 h-6 md:w-16 md:h-8 bg-gray-300 rounded-lg mx-auto mb-2"></div>
+                            <p class="text-xs md:text-sm text-gray-600">Teacher's Desk</p>
                         </div>
-                        <div class="flex items-center">
-                            <div class="w-4 h-4 bg-red-200 rounded mr-2"></div>
-                            <span class="text-sm text-gray-600">Other Students</span>
+                        
+                        <div class="seats-grid">
+                            <?php
+                            $userSeat = $seat_info['seat_number'] ?? null;
+                            $occupiedSeats = ['A-7', 'A-13', 'A-14', 'A-21', 'A-26', 'A-28', 'A-35', 'A-39', 'A-42', 'A-49'];
+                            
+                            for ($i = 1; $i <= 50; $i++) {
+                                $seatNumber = "A-" . $i;
+                                $seatClass = "seat";
+                                
+                                // Determine seat status
+                                if ($userSeat && $userSeat == $seatNumber) {
+                                    $seatClass .= " current";
+                                } elseif (in_array($seatNumber, $occupiedSeats)) {
+                                    $seatClass .= " occupied";
+                                } else {
+                                    $seatClass .= " available";
+                                }
+                                
+                                echo "<div class='$seatClass'>$seatNumber</div>";
+                            }
+                            ?>
+                        </div>
+                        
+                        <div class="flex justify-center mt-6 md:mt-8 space-x-4 md:space-x-6">
+                            <div class="flex items-center">
+                                <div class="w-3 h-3 md:w-4 md:h-4 bg-green-100 border border-green-300 rounded mr-1 md:mr-2"></div>
+                                <span class="text-xs md:text-sm text-gray-600">Available</span>
+                            </div>
+                            <div class="flex items-center">
+                                <div class="w-3 h-3 md:w-4 md:h-4 bg-red-100 border border-red-300 rounded mr-1 md:mr-2"></div>
+                                <span class="text-xs md:text-sm text-gray-600">Occupied</span>
+                            </div>
+                            <div class="flex items-center">
+                                <div class="w-3 h-3 md:w-4 md:h-4 bg-blue-100 border border-blue-500 rounded mr-1 md:mr-2"></div>
+                                <span class="text-xs md:text-sm text-gray-600">Your Seat</span>
+                            </div>
                         </div>
                     </div>
                 </div>

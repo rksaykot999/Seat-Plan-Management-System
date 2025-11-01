@@ -50,7 +50,7 @@ if (isset($_POST['update_profile'])) {
     $name = $conn->real_escape_string($_POST['name']);
     $email = $conn->real_escape_string($_POST['email']);
     $phone = $conn->real_escape_string($_POST['phone']);
-    
+
     $update_sql = "UPDATE students SET name='$name', email='$email', phone='$phone' WHERE student_id=$student_id";
     if ($conn->query($update_sql)) {
         $_SESSION['student_name'] = $name;
@@ -65,6 +65,7 @@ if (isset($_POST['update_profile'])) {
 
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -82,61 +83,75 @@ if (isset($_POST['update_profile'])) {
             --warning: #f59e0b;
             --danger: #ef4444;
         }
-        
+
         .gradient-bg {
             background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
         }
-        
+
         .glass-effect {
             background: rgba(255, 255, 255, 0.1);
             backdrop-filter: blur(10px);
             border: 1px solid rgba(255, 255, 255, 0.2);
         }
-        
+
         .card-hover {
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             border: 1px solid #e5e7eb;
         }
-        
+
         .card-hover:hover {
             transform: translateY(-5px);
             box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
             border-color: var(--primary);
         }
-        
+
         .floating {
             animation: floating 6s ease-in-out infinite;
         }
-        
+
         @keyframes floating {
-            0%, 100% { transform: translateY(0px) rotate(0deg); }
-            50% { transform: translateY(-20px) rotate(5deg); }
+
+            0%,
+            100% {
+                transform: translateY(0px) rotate(0deg);
+            }
+
+            50% {
+                transform: translateY(-20px) rotate(5deg);
+            }
         }
-        
+
         .tab-content {
             display: none;
         }
-        
+
         .tab-content.active {
             display: block;
             animation: fadeIn 0.5s ease-in-out;
         }
-        
+
         @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
-        
+
         .nav-item {
             position: relative;
             transition: all 0.3s ease;
         }
-        
+
         .nav-item.active {
             background: rgba(99, 102, 241, 0.1);
             color: var(--primary);
         }
-        
+
         .nav-item.active::before {
             content: '';
             position: absolute;
@@ -147,7 +162,7 @@ if (isset($_POST['update_profile'])) {
             background: var(--primary);
             border-radius: 0 4px 4px 0;
         }
-        
+
         .seat {
             width: 60px;
             height: 60px;
@@ -159,19 +174,19 @@ if (isset($_POST['update_profile'])) {
             font-weight: bold;
             transition: all 0.3s ease;
         }
-        
+
         .seat.available {
             background: #f0fdf4;
             border-color: #bbf7d0;
             color: #166534;
         }
-        
+
         .seat.occupied {
             background: #fef2f2;
             border-color: #fecaca;
             color: #dc2626;
         }
-        
+
         .seat.current {
             background: #dbeafe;
             border-color: var(--primary);
@@ -179,79 +194,79 @@ if (isset($_POST['update_profile'])) {
             transform: scale(1.05);
             box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
         }
-        
+
         .document-card {
             transition: all 0.3s ease;
         }
-        
+
         .document-card:hover {
             transform: translateY(-3px);
             box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
         }
-        
+
         /* Mobile sidebar styles */
         .sidebar {
             transform: translateX(-100%);
             transition: transform 0.3s ease-in-out;
             z-index: 50;
         }
-        
+
         .sidebar.open {
             transform: translateX(0);
         }
-        
+
         @media (min-width: 1024px) {
             .sidebar {
                 transform: translateX(0);
             }
         }
-        
+
         /* Mobile responsive adjustments */
         @media (max-width: 1023px) {
             .main-content {
                 margin-left: 0;
             }
-            
+
             .seat {
                 width: 45px;
                 height: 45px;
                 font-size: 0.8rem;
             }
         }
-        
+
         @media (max-width: 768px) {
             .grid-cols-4 {
                 grid-template-columns: repeat(2, minmax(0, 1fr));
             }
-            
+
             .grid-cols-3 {
                 grid-template-columns: repeat(1, minmax(0, 1fr));
             }
-            
+
             .grid-cols-2 {
                 grid-template-columns: repeat(1, minmax(0, 1fr));
             }
-            
+
             .seat {
                 width: 40px;
                 height: 40px;
                 font-size: 0.7rem;
             }
         }
-        
+
         @media (max-width: 480px) {
             .grid-cols-4 {
                 grid-template-columns: repeat(1, minmax(0, 1fr));
             }
-            
+
             .p-8 {
                 padding: 1rem;
             }
-            
+
             .text-2xl {
                 font-size: 1.5rem;
             }
-            
+
             .seat {
                 width: 35px;
                 height: 35px;
@@ -260,6 +275,7 @@ if (isset($_POST['update_profile'])) {
         }
     </style>
 </head>
+
 <body class="bg-gray-50 min-h-screen font-sans">
     <!-- Mobile Menu Button -->
     <div class="lg:hidden fixed top-4 left-4 z-50">
@@ -283,80 +299,65 @@ if (isset($_POST['update_profile'])) {
             </div>
         </div>
 
-        <!-- User Profile -->
-        <div class="p-6 border-b border-gray-100">
-            <div class="flex items-center space-x-4">
-                <div class="relative">
-                    <div class="w-14 h-14 bg-gradient-to-r from-indigo-400 to-purple-500 rounded-2xl flex items-center justify-center shadow-lg">
-                        <i class="fas fa-user-graduate text-white text-xl"></i>
-                    </div>
-                    <div class="absolute -bottom-1 -right-1 w-5 h-5 bg-green-400 rounded-full border-2 border-white"></div>
-                </div>
-                <div class="flex-1">
-                    <h3 class="font-semibold text-gray-800"><?= htmlspecialchars($_SESSION['student_name']); ?></h3>
-                    <p class="text-gray-600 text-sm"><?= htmlspecialchars($_SESSION['student_department']); ?></p>
-                    <p class="text-gray-500 text-xs"><?= htmlspecialchars($_SESSION['student_roll_no']); ?></p>
-                </div>
-            </div>
-        </div>
-
         <!-- Navigation -->
         <nav class="p-4 space-y-2">
             <a href="#" class="nav-item active flex items-center space-x-4 p-4 rounded-xl transition" data-tab="dashboard">
-                <div class="w-10 h-10 bg-indigo-100 rounded-lg flex items-center justify-center">
+                <div class="w-5 h-5 bg-indigo-100 rounded-lg flex items-center justify-center">
                     <i class="fas fa-tachometer-alt text-indigo-600"></i>
                 </div>
                 <span class="font-medium">Dashboard</span>
             </a>
-            
+
             <a href="#" class="nav-item flex items-center space-x-4 p-4 text-gray-600 hover:bg-gray-50 rounded-xl transition" data-tab="seat-plan">
-                <div class="w-10 h-10 bg-gray-100 rounded-lg flex items-center justify-center">
+                <div class="w-5 h-5 bg-gray-100 rounded-lg flex items-center justify-center">
                     <i class="fas fa-chair text-gray-600"></i>
                 </div>
                 <span class="font-medium">Seat Plan</span>
             </a>
-            
+
             <a href="#" class="nav-item flex items-center space-x-4 p-4 text-gray-600 hover:bg-gray-50 rounded-xl transition" data-tab="notices">
-                <div class="w-10 h-10 bg-gray-100 rounded-lg flex items-center justify-center">
+                <div class="w-5 h-5 bg-gray-100 rounded-lg flex items-center justify-center">
                     <i class="fas fa-bullhorn text-gray-600"></i>
                 </div>
                 <span class="font-medium">Notices</span>
                 <span class="ml-auto bg-red-500 text-white text-xs px-2 py-1 rounded-full" id="notice-count"><?= $all_notices->num_rows; ?></span>
             </a>
-            
+
             <a href="#" class="nav-item flex items-center space-x-4 p-4 text-gray-600 hover:bg-gray-50 rounded-xl transition" data-tab="profile">
-                <div class="w-10 h-10 bg-gray-100 rounded-lg flex items-center justify-center">
+                <div class="w-5 h-5 bg-gray-100 rounded-lg flex items-center justify-center">
                     <i class="fas fa-user text-gray-600"></i>
                 </div>
                 <span class="font-medium">Profile</span>
             </a>
-            
+
             <a href="#" class="nav-item flex items-center space-x-4 p-4 text-gray-600 hover:bg-gray-50 rounded-xl transition" data-tab="documents">
-                <div class="w-10 h-10 bg-gray-100 rounded-lg flex items-center justify-center">
+                <div class="w-5 h-5 bg-gray-100 rounded-lg flex items-center justify-center">
                     <i class="fas fa-file-alt text-gray-600"></i>
                 </div>
                 <span class="font-medium">Documents</span>
             </a>
         </nav>
 
-        <!-- Quick Stats -->
-        <div class="p-4 mt-4">
-            <div class="bg-gradient-to-r from-indigo-500 to-purple-600 rounded-2xl p-4 text-white">
-                <h4 class="font-semibold text-sm mb-2">Academic Progress</h4>
-                <div class="flex items-center justify-between">
-                    <div>
-                        <p class="text-2xl font-bold"><?= htmlspecialchars($_SESSION['student_semester']); ?></p>
-                        <p class="text-indigo-100 text-xs">Current Semester</p>
-                    </div>
-                    <div class="w-12 h-12 bg-white/20 rounded-full flex items-center justify-center">
-                        <i class="fas fa-graduation-cap"></i>
-                    </div>
-                </div>
-            </div>
-        </div>
+
 
         <!-- Footer -->
         <div class="absolute bottom-0 left-0 right-0 p-4 border-t border-gray-100">
+            <!-- User Profile -->
+            <div class="p-6 border-b border-gray-100">
+                <div class="flex items-center space-x-4">
+                    <div class="relative">
+                        <div class="w-14 h-14 bg-gradient-to-r from-indigo-400 to-purple-500 rounded-2xl flex items-center justify-center shadow-lg">
+                            <i class="fas fa-user-graduate text-white text-xl"></i>
+                        </div>
+                        <div class="absolute -bottom-1 -right-1 w-5 h-5 bg-green-400 rounded-full border-2 border-white"></div>
+                    </div>
+                    <div class="flex-1">
+                        <h3 class="font-semibold text-gray-800"><?= htmlspecialchars($_SESSION['student_name']); ?></h3>
+                        <p class="text-gray-600 text-sm"><?= htmlspecialchars($_SESSION['student_department']); ?></p>
+                        <p class="text-gray-500 text-xs"><?= htmlspecialchars($_SESSION['student_roll_no']); ?></p>
+                    </div>
+                </div>
+            </div>
             <a href="?logout=true" class="flex items-center space-x-3 p-3 text-red-600 hover:bg-red-50 rounded-xl transition">
                 <div class="w-10 h-10 bg-red-100 rounded-lg flex items-center justify-center">
                     <i class="fas fa-sign-out-alt"></i>
@@ -375,7 +376,7 @@ if (isset($_POST['update_profile'])) {
         <header class="bg-white shadow-sm border-b border-gray-200 sticky top-0 z-20">
             <div class="px-4 md:px-8 py-4">
                 <div class="flex justify-between items-center">
-                    <div>
+                    <div class="pl-16 md:pl-0">
                         <h1 class="text-xl md:text-2xl font-bold text-gray-800" id="page-title">Dashboard Overview</h1>
                         <p class="text-gray-600 text-sm" id="page-subtitle">Welcome back, <?= htmlspecialchars($_SESSION['student_name']); ?>! 👋</p>
                     </div>
@@ -387,7 +388,7 @@ if (isset($_POST['update_profile'])) {
                             </button>
                             <span class="absolute -top-1 -right-1 w-5 h-5 bg-red-500 text-white text-xs rounded-full flex items-center justify-center"><?= $all_notices->num_rows; ?></span>
                         </div>
-                        
+
                         <!-- Current Tab Quick Actions -->
                         <div class="hidden md:flex items-center space-x-3" id="quick-actions">
                             <button class="bg-indigo-50 text-indigo-600 px-4 py-2 rounded-xl font-medium hover:bg-indigo-100 transition" data-tab="seat-plan">
@@ -496,7 +497,7 @@ if (isset($_POST['update_profile'])) {
                                     </button>
                                 </div>
                             </div>
-                            
+
                             <!-- Floating Elements -->
                             <div class="absolute top-4 right-4 floating hidden md:block">
                                 <div class="w-16 h-16 md:w-20 md:h-20 bg-white/10 rounded-2xl flex items-center justify-center">
@@ -531,7 +532,7 @@ if (isset($_POST['update_profile'])) {
                                                 <i class="fas fa-check text-green-600 text-xl md:text-2xl"></i>
                                             </div>
                                             <h3 class="text-base md:text-lg font-bold text-gray-800 mb-4">Seat Allocated! 🎉</h3>
-                                            
+
                                             <div class="space-y-3 md:space-y-4 mb-4 md:mb-6">
                                                 <div class="flex items-center justify-between p-3 bg-white rounded-xl shadow-sm">
                                                     <div class="flex items-center">
@@ -544,7 +545,7 @@ if (isset($_POST['update_profile'])) {
                                                         </div>
                                                     </div>
                                                 </div>
-                                                
+
                                                 <div class="flex items-center justify-between p-3 bg-white rounded-xl shadow-sm">
                                                     <div class="flex items-center">
                                                         <div class="w-8 h-8 md:w-10 md:h-10 bg-blue-100 rounded-lg flex items-center justify-center mr-2 md:mr-3">
@@ -556,7 +557,7 @@ if (isset($_POST['update_profile'])) {
                                                         </div>
                                                     </div>
                                                 </div>
-                                                
+
                                                 <div class="flex items-center justify-between p-3 bg-white rounded-xl shadow-sm">
                                                     <div class="flex items-center">
                                                         <div class="w-8 h-8 md:w-10 md:h-10 bg-purple-100 rounded-lg flex items-center justify-center mr-2 md:mr-3">
@@ -633,7 +634,7 @@ if (isset($_POST['update_profile'])) {
                                     </div>
                                     <i class="fas fa-chevron-right text-purple-400 group-hover:translate-x-1 transition"></i>
                                 </button>
-                                
+
                                 <button class="w-full flex items-center justify-between p-3 md:p-4 bg-blue-50 text-blue-700 rounded-xl hover:bg-blue-100 transition group" data-tab="notices">
                                     <div class="flex items-center">
                                         <div class="w-8 h-8 md:w-10 md:h-10 bg-blue-100 rounded-lg flex items-center justify-center mr-2 md:mr-3 group-hover:bg-white transition">
@@ -643,7 +644,7 @@ if (isset($_POST['update_profile'])) {
                                     </div>
                                     <i class="fas fa-chevron-right text-blue-400 group-hover:translate-x-1 transition"></i>
                                 </button>
-                                
+
                                 <button class="w-full flex items-center justify-between p-3 md:p-4 bg-green-50 text-green-700 rounded-xl hover:bg-green-100 transition group" data-tab="profile">
                                     <div class="flex items-center">
                                         <div class="w-8 h-8 md:w-10 md:h-10 bg-green-100 rounded-lg flex items-center justify-center mr-2 md:mr-3 group-hover:bg-white transition">
@@ -653,7 +654,7 @@ if (isset($_POST['update_profile'])) {
                                     </div>
                                     <i class="fas fa-chevron-right text-green-400 group-hover:translate-x-1 transition"></i>
                                 </button>
-                                
+
                                 <button class="w-full flex items-center justify-between p-3 md:p-4 bg-orange-50 text-orange-700 rounded-xl hover:bg-orange-100 transition group" data-tab="documents">
                                     <div class="flex items-center">
                                         <div class="w-8 h-8 md:w-10 md:h-10 bg-orange-100 rounded-lg flex items-center justify-center mr-2 md:mr-3 group-hover:bg-white transition">
@@ -676,23 +677,23 @@ if (isset($_POST['update_profile'])) {
                                 <span class="bg-red-100 text-red-800 text-xs font-medium px-2 py-1 rounded-full">New</span>
                             </div>
                             <div class="space-y-3 md:space-y-4">
-                                <?php 
+                                <?php
                                 $recent_notices = $conn->query("SELECT * FROM notices ORDER BY posted_at DESC LIMIT 3");
-                                if ($recent_notices->num_rows > 0): 
-                                    while ($notice = $recent_notices->fetch_assoc()): 
+                                if ($recent_notices->num_rows > 0):
+                                    while ($notice = $recent_notices->fetch_assoc()):
                                 ?>
-                                    <div class="border-l-4 border-red-500 pl-3 md:pl-4 py-2 md:py-3 hover:bg-gray-50 rounded-r-xl transition">
-                                        <h3 class="font-semibold text-gray-800 text-sm mb-1"><?= htmlspecialchars($notice['title']); ?></h3>
-                                        <p class="text-gray-600 text-xs mb-2 line-clamp-2"><?= htmlspecialchars($notice['description']); ?></p>
-                                        <div class="flex items-center text-gray-500 text-xs">
-                                            <i class="fas fa-clock mr-1"></i>
-                                            <span><?= date('M j, Y g:i A', strtotime($notice['posted_at'])); ?></span>
+                                        <div class="border-l-4 border-red-500 pl-3 md:pl-4 py-2 md:py-3 hover:bg-gray-50 rounded-r-xl transition">
+                                            <h3 class="font-semibold text-gray-800 text-sm mb-1"><?= htmlspecialchars($notice['title']); ?></h3>
+                                            <p class="text-gray-600 text-xs mb-2 line-clamp-2"><?= htmlspecialchars($notice['description']); ?></p>
+                                            <div class="flex items-center text-gray-500 text-xs">
+                                                <i class="fas fa-clock mr-1"></i>
+                                                <span><?= date('M j, Y g:i A', strtotime($notice['posted_at'])); ?></span>
+                                            </div>
                                         </div>
-                                    </div>
-                                <?php 
-                                    endwhile; 
-                                else: 
-                                ?>
+                                    <?php
+                                    endwhile;
+                                else:
+                                    ?>
                                     <p class="text-gray-500 text-sm text-center py-4">No notices available at the moment.</p>
                                 <?php endif; ?>
                                 <button class="w-full text-center text-indigo-600 hover:text-indigo-800 font-medium text-sm mt-3 md:mt-4 transition" data-tab="notices">
@@ -712,7 +713,7 @@ if (isset($_POST['update_profile'])) {
                         Exam Seat Plan
                     </h2>
                     <p class="text-gray-600 mb-4 md:mb-6">View your allocated seat and room layout for the upcoming exams.</p>
-                    
+
                     <?php if ($_SESSION['student_seat_number']): ?>
                         <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 md:gap-8">
                             <!-- Seat Details -->
@@ -734,7 +735,7 @@ if (isset($_POST['update_profile'])) {
                                                 </div>
                                             </div>
                                         </div>
-                                        
+
                                         <div class="flex items-center justify-between p-3 bg-white rounded-xl">
                                             <div class="flex items-center">
                                                 <div class="w-8 h-8 md:w-10 md:h-10 bg-blue-100 rounded-lg flex items-center justify-center mr-2 md:mr-3">
@@ -746,7 +747,7 @@ if (isset($_POST['update_profile'])) {
                                                 </div>
                                             </div>
                                         </div>
-                                        
+
                                         <div class="flex items-center justify-between p-3 bg-white rounded-xl">
                                             <div class="flex items-center">
                                                 <div class="w-8 h-8 md:w-10 md:h-10 bg-purple-100 rounded-lg flex items-center justify-center mr-2 md:mr-3">
@@ -758,7 +759,7 @@ if (isset($_POST['update_profile'])) {
                                                 </div>
                                             </div>
                                         </div>
-                                        
+
                                         <div class="flex items-center justify-between p-3 bg-white rounded-xl">
                                             <div class="flex items-center">
                                                 <div class="w-8 h-8 md:w-10 md:h-10 bg-green-100 rounded-lg flex items-center justify-center mr-2 md:mr-3">
@@ -772,7 +773,7 @@ if (isset($_POST['update_profile'])) {
                                         </div>
                                     </div>
                                 </div>
-                                
+
                                 <!-- Instructions -->
                                 <div class="mt-4 md:mt-6 bg-yellow-50 border border-yellow-200 rounded-2xl p-4 md:p-5">
                                     <h4 class="font-semibold text-yellow-800 mb-2 md:mb-3 flex items-center">
@@ -795,7 +796,7 @@ if (isset($_POST['update_profile'])) {
                                     </ul>
                                 </div>
                             </div>
-                            
+
                             <!-- Room Layout -->
                             <div class="lg:col-span-2">
                                 <div class="bg-white border border-gray-200 rounded-2xl p-4 md:p-6">
@@ -804,24 +805,24 @@ if (isset($_POST['update_profile'])) {
                                         Room Layout - <?= htmlspecialchars($_SESSION['student_room_name']); ?>
                                     </h3>
                                     <p class="text-gray-600 mb-4 md:mb-6">Your seat is highlighted in blue. Each number represents a seat in the examination room.</p>
-                                    
+
                                     <div class="bg-gray-50 rounded-xl p-4 md:p-6">
                                         <div class="text-center mb-4 md:mb-6">
                                             <div class="w-12 h-6 md:w-16 md:h-8 bg-gray-300 rounded-lg mx-auto mb-2"></div>
                                             <p class="text-xs md:text-sm text-gray-600">Teacher's Desk</p>
                                         </div>
-                                        
+
                                         <div class="grid grid-cols-4 md:grid-cols-5 gap-3 md:gap-4 mx-auto max-w-xs md:max-w-md">
                                             <?php
                                             // Generate sample seat layout
                                             $total_seats = $room_layout['capacity'] ?? 50;
                                             $rows = ceil($total_seats / 5);
                                             $current_seat = $_SESSION['student_seat_number'];
-                                            
+
                                             for ($i = 1; $i <= $total_seats; $i++):
                                                 $seat_class = "available";
                                                 $seat_number = "A-" . $i;
-                                                
+
                                                 if ($seat_number === $current_seat) {
                                                     $seat_class = "current";
                                                 } elseif ($i % 7 === 0 || $i % 13 === 0) {
@@ -833,7 +834,7 @@ if (isset($_POST['update_profile'])) {
                                                 </div>
                                             <?php endfor; ?>
                                         </div>
-                                        
+
                                         <div class="flex justify-center mt-6 md:mt-8 space-x-4 md:space-x-6">
                                             <div class="flex items-center">
                                                 <div class="w-3 h-3 md:w-4 md:h-4 bg-green-100 border border-green-300 rounded mr-1 md:mr-2"></div>
@@ -875,34 +876,34 @@ if (isset($_POST['update_profile'])) {
                         Important Notices & Announcements
                     </h2>
                     <p class="text-gray-600 mb-4 md:mb-6">Stay updated with the latest announcements from the administration.</p>
-                    
+
                     <div class="space-y-4 md:space-y-6">
-                        <?php if ($all_notices->num_rows > 0): 
-                            while ($notice = $all_notices->fetch_assoc()): 
+                        <?php if ($all_notices->num_rows > 0):
+                            while ($notice = $all_notices->fetch_assoc()):
                                 $is_new = (time() - strtotime($notice['posted_at'])) < (7 * 24 * 60 * 60); // New if posted within 7 days
                         ?>
-                            <div class="border border-gray-200 rounded-2xl p-4 md:p-6 hover:border-red-200 hover:bg-red-50 transition-all duration-300">
-                                <div class="flex items-start justify-between mb-2 md:mb-3">
-                                    <h3 class="text-base md:text-lg font-bold text-gray-800 flex items-center">
-                                        <?= htmlspecialchars($notice['title']); ?>
-                                        <?php if ($is_new): ?>
-                                            <span class="ml-2 md:ml-3 bg-red-500 text-white text-xs px-2 py-1 rounded-full">New</span>
-                                        <?php endif; ?>
-                                    </h3>
-                                    <span class="text-xs md:text-sm text-gray-500 bg-gray-100 px-2 md:px-3 py-1 rounded-full">
-                                        <?= date('M j, Y', strtotime($notice['posted_at'])); ?>
-                                    </span>
+                                <div class="border border-gray-200 rounded-2xl p-4 md:p-6 hover:border-red-200 hover:bg-red-50 transition-all duration-300">
+                                    <div class="flex items-start justify-between mb-2 md:mb-3">
+                                        <h3 class="text-base md:text-lg font-bold text-gray-800 flex items-center">
+                                            <?= htmlspecialchars($notice['title']); ?>
+                                            <?php if ($is_new): ?>
+                                                <span class="ml-2 md:ml-3 bg-red-500 text-white text-xs px-2 py-1 rounded-full">New</span>
+                                            <?php endif; ?>
+                                        </h3>
+                                        <span class="text-xs md:text-sm text-gray-500 bg-gray-100 px-2 md:px-3 py-1 rounded-full">
+                                            <?= date('M j, Y', strtotime($notice['posted_at'])); ?>
+                                        </span>
+                                    </div>
+                                    <p class="text-gray-600 mb-3 md:mb-4 text-sm md:text-base"><?= htmlspecialchars($notice['description']); ?></p>
+                                    <div class="flex items-center text-xs md:text-sm text-gray-500">
+                                        <i class="fas fa-clock mr-2"></i>
+                                        <span>Posted on <?= date('F j, Y \\a\\t g:i A', strtotime($notice['posted_at'])); ?></span>
+                                    </div>
                                 </div>
-                                <p class="text-gray-600 mb-3 md:mb-4 text-sm md:text-base"><?= htmlspecialchars($notice['description']); ?></p>
-                                <div class="flex items-center text-xs md:text-sm text-gray-500">
-                                    <i class="fas fa-clock mr-2"></i>
-                                    <span>Posted on <?= date('F j, Y \\a\\t g:i A', strtotime($notice['posted_at'])); ?></span>
-                                </div>
-                            </div>
-                        <?php 
-                            endwhile; 
-                        else: 
-                        ?>
+                            <?php
+                            endwhile;
+                        else:
+                            ?>
                             <div class="text-center py-8 md:py-12">
                                 <div class="w-16 h-16 md:w-20 md:h-20 bg-gray-100 rounded-2xl flex items-center justify-center mx-auto mb-4">
                                     <i class="fas fa-bullhorn text-gray-400 text-xl md:text-2xl"></i>
@@ -923,7 +924,7 @@ if (isset($_POST['update_profile'])) {
                         Student Profile
                     </h2>
                     <p class="text-gray-600 mb-4 md:mb-6">Manage your personal information and account settings.</p>
-                    
+
                     <?php if (isset($profile_success)): ?>
                         <div class="bg-green-50 border border-green-200 rounded-xl p-3 md:p-4 mb-4 md:mb-6">
                             <div class="flex items-center">
@@ -936,7 +937,7 @@ if (isset($_POST['update_profile'])) {
                             </div>
                         </div>
                     <?php endif; ?>
-                    
+
                     <?php if (isset($profile_error)): ?>
                         <div class="bg-red-50 border border-red-200 rounded-xl p-3 md:p-4 mb-4 md:mb-6">
                             <div class="flex items-center">
@@ -949,7 +950,7 @@ if (isset($_POST['update_profile'])) {
                             </div>
                         </div>
                     <?php endif; ?>
-                    
+
                     <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 md:gap-8">
                         <!-- Profile Information -->
                         <div class="lg:col-span-2">
@@ -959,45 +960,45 @@ if (isset($_POST['update_profile'])) {
                                         <i class="fas fa-info-circle mr-2 text-blue-600"></i>
                                         Personal Information
                                     </h3>
-                                    
+
                                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
                                         <div>
                                             <label class="block text-sm font-medium text-gray-700 mb-2">Full Name</label>
-                                            <input type="text" name="name" value="<?= htmlspecialchars($_SESSION['student_name']); ?>" 
-                                                   class="w-full px-3 md:px-4 py-2 md:py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition text-sm md:text-base" required>
+                                            <input type="text" name="name" value="<?= htmlspecialchars($_SESSION['student_name']); ?>"
+                                                class="w-full px-3 md:px-4 py-2 md:py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition text-sm md:text-base" required>
                                         </div>
-                                        
+
                                         <div>
                                             <label class="block text-sm font-medium text-gray-700 mb-2">Email Address</label>
-                                            <input type="email" name="email" value="<?= htmlspecialchars($_SESSION['student_email']); ?>" 
-                                                   class="w-full px-3 md:px-4 py-2 md:py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition text-sm md:text-base" required>
+                                            <input type="email" name="email" value="<?= htmlspecialchars($_SESSION['student_email']); ?>"
+                                                class="w-full px-3 md:px-4 py-2 md:py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition text-sm md:text-base" required>
                                         </div>
-                                        
+
                                         <div>
                                             <label class="block text-sm font-medium text-gray-700 mb-2">Phone Number</label>
-                                            <input type="tel" name="phone" value="<?= htmlspecialchars($_SESSION['student_phone']); ?>" 
-                                                   class="w-full px-3 md:px-4 py-2 md:py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition text-sm md:text-base">
+                                            <input type="tel" name="phone" value="<?= htmlspecialchars($_SESSION['student_phone']); ?>"
+                                                class="w-full px-3 md:px-4 py-2 md:py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition text-sm md:text-base">
                                         </div>
-                                        
+
                                         <div>
                                             <label class="block text-sm font-medium text-gray-700 mb-2">Department</label>
-                                            <input type="text" value="<?= htmlspecialchars($_SESSION['student_department']); ?>" 
-                                                   class="w-full px-3 md:px-4 py-2 md:py-3 bg-gray-100 border border-gray-300 rounded-lg text-sm md:text-base" disabled>
+                                            <input type="text" value="<?= htmlspecialchars($_SESSION['student_department']); ?>"
+                                                class="w-full px-3 md:px-4 py-2 md:py-3 bg-gray-100 border border-gray-300 rounded-lg text-sm md:text-base" disabled>
                                         </div>
-                                        
+
                                         <div>
                                             <label class="block text-sm font-medium text-gray-700 mb-2">Roll Number</label>
-                                            <input type="text" value="<?= htmlspecialchars($_SESSION['student_roll_no']); ?>" 
-                                                   class="w-full px-3 md:px-4 py-2 md:py-3 bg-gray-100 border border-gray-300 rounded-lg text-sm md:text-base" disabled>
+                                            <input type="text" value="<?= htmlspecialchars($_SESSION['student_roll_no']); ?>"
+                                                class="w-full px-3 md:px-4 py-2 md:py-3 bg-gray-100 border border-gray-300 rounded-lg text-sm md:text-base" disabled>
                                         </div>
-                                        
+
                                         <div>
                                             <label class="block text-sm font-medium text-gray-700 mb-2">Registration Number</label>
-                                            <input type="text" value="<?= htmlspecialchars($_SESSION['student_registration_no']); ?>" 
-                                                   class="w-full px-3 md:px-4 py-2 md:py-3 bg-gray-100 border border-gray-300 rounded-lg text-sm md:text-base" disabled>
+                                            <input type="text" value="<?= htmlspecialchars($_SESSION['student_registration_no']); ?>"
+                                                class="w-full px-3 md:px-4 py-2 md:py-3 bg-gray-100 border border-gray-300 rounded-lg text-sm md:text-base" disabled>
                                         </div>
                                     </div>
-                                    
+
                                     <div class="mt-4 md:mt-6">
                                         <button type="submit" name="update_profile" class="bg-blue-500 hover:bg-blue-600 text-white px-4 md:px-6 py-2 md:py-3 rounded-lg font-semibold transition flex items-center text-sm md:text-base">
                                             <i class="fas fa-save mr-2"></i> Update Profile
@@ -1006,7 +1007,7 @@ if (isset($_POST['update_profile'])) {
                                 </div>
                             </form>
                         </div>
-                        
+
                         <!-- Account Summary -->
                         <div class="space-y-4 md:space-y-6">
                             <div class="bg-gradient-to-br from-green-50 to-emerald-50 border border-green-200 rounded-2xl p-4 md:p-6">
@@ -1029,7 +1030,7 @@ if (isset($_POST['update_profile'])) {
                                     </div>
                                 </div>
                             </div>
-                            
+
                             <div class="bg-gradient-to-br from-purple-50 to-indigo-50 border border-purple-200 rounded-2xl p-4 md:p-6">
                                 <h3 class="text-base md:text-lg font-bold text-gray-800 mb-3 md:mb-4 flex items-center">
                                     <i class="fas fa-graduation-cap mr-2 text-purple-600"></i>
@@ -1063,7 +1064,7 @@ if (isset($_POST['update_profile'])) {
                         My Documents
                     </h2>
                     <p class="text-gray-600 mb-4 md:mb-6">Access and download your important academic documents.</p>
-                    
+
                     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
                         <!-- Admit Card -->
                         <div class="document-card bg-gradient-to-br from-blue-50 to-indigo-50 border border-blue-200 rounded-2xl p-4 md:p-6">
@@ -1084,7 +1085,7 @@ if (isset($_POST['update_profile'])) {
                                 </button>
                             </div>
                         </div>
-                        
+
                         <!-- Fee Receipt -->
                         <div class="document-card bg-gradient-to-br from-green-50 to-emerald-50 border border-green-200 rounded-2xl p-4 md:p-6">
                             <div class="flex items-center justify-between mb-3 md:mb-4">
@@ -1104,7 +1105,7 @@ if (isset($_POST['update_profile'])) {
                                 </button>
                             </div>
                         </div>
-                        
+
                         <!-- ID Card -->
                         <div class="document-card bg-gradient-to-br from-purple-50 to-pink-50 border border-purple-200 rounded-2xl p-4 md:p-6">
                             <div class="flex items-center justify-between mb-3 md:mb-4">
@@ -1124,7 +1125,7 @@ if (isset($_POST['update_profile'])) {
                                 </button>
                             </div>
                         </div>
-                        
+
                         <!-- Academic Transcript -->
                         <div class="document-card bg-gradient-to-br from-orange-50 to-amber-50 border border-orange-200 rounded-2xl p-4 md:p-6">
                             <div class="flex items-center justify-between mb-3 md:mb-4">
@@ -1144,7 +1145,7 @@ if (isset($_POST['update_profile'])) {
                                 </button>
                             </div>
                         </div>
-                        
+
                         <!-- Course Registration -->
                         <div class="document-card bg-gradient-to-br from-red-50 to-pink-50 border border-red-200 rounded-2xl p-4 md:p-6">
                             <div class="flex items-center justify-between mb-3 md:mb-4">
@@ -1164,7 +1165,7 @@ if (isset($_POST['update_profile'])) {
                                 </button>
                             </div>
                         </div>
-                        
+
                         <!-- Seat Allocation -->
                         <div class="document-card bg-gradient-to-br from-teal-50 to-cyan-50 border border-teal-200 rounded-2xl p-4 md:p-6">
                             <div class="flex items-center justify-between mb-3 md:mb-4">
@@ -1214,7 +1215,7 @@ if (isset($_POST['update_profile'])) {
             const pageTitle = document.getElementById('page-title');
             const pageSubtitle = document.getElementById('page-subtitle');
             const quickActions = document.getElementById('quick-actions');
-            
+
             // Tab titles and subtitles
             const tabData = {
                 'dashboard': {
@@ -1238,7 +1239,7 @@ if (isset($_POST['update_profile'])) {
                     subtitle: 'Access your academic documents'
                 }
             };
-            
+
             // Quick actions for each tab
             const quickActionsData = {
                 'dashboard': `
@@ -1282,35 +1283,35 @@ if (isset($_POST['update_profile'])) {
                     </button>
                 `
             };
-            
+
             // Function to switch tabs
             function switchTab(tabName) {
                 // Hide all tab contents
                 tabContents.forEach(content => {
                     content.classList.remove('active');
                 });
-                
+
                 // Remove active class from all nav items
                 navItems.forEach(item => {
                     item.classList.remove('active');
                 });
-                
+
                 // Show selected tab content
                 document.getElementById(`${tabName}-tab`).classList.add('active');
-                
+
                 // Add active class to selected nav item
                 document.querySelector(`[data-tab="${tabName}"]`).classList.add('active');
-                
+
                 // Update page title and subtitle
                 if (tabData[tabName]) {
                     pageTitle.textContent = tabData[tabName].title;
                     pageSubtitle.textContent = tabData[tabName].subtitle;
                 }
-                
+
                 // Update quick actions
                 if (quickActions && quickActionsData[tabName]) {
                     quickActions.innerHTML = quickActionsData[tabName];
-                    
+
                     // Add event listeners to new quick action buttons
                     quickActions.querySelectorAll('[data-tab]').forEach(button => {
                         button.addEventListener('click', function() {
@@ -1319,7 +1320,7 @@ if (isset($_POST['update_profile'])) {
                     });
                 }
             }
-            
+
             // Add click event listeners to all tab buttons
             tabs.forEach(tab => {
                 tab.addEventListener('click', function() {
@@ -1327,39 +1328,39 @@ if (isset($_POST['update_profile'])) {
                     switchTab(tabName);
                 });
             });
-            
+
             // Mobile menu functionality
             const mobileMenuButton = document.getElementById('mobile-menu-button');
             const sidebar = document.querySelector('.sidebar');
             const mobileOverlay = document.getElementById('mobile-overlay');
-            
+
             function openMobileMenu() {
                 sidebar.classList.add('open');
                 mobileOverlay.classList.remove('hidden');
                 document.body.style.overflow = 'hidden';
             }
-            
+
             function closeMobileMenu() {
                 sidebar.classList.remove('open');
                 mobileOverlay.classList.add('hidden');
                 document.body.style.overflow = '';
             }
-            
+
             mobileMenuButton.addEventListener('click', openMobileMenu);
             mobileOverlay.addEventListener('click', closeMobileMenu);
-            
+
             // Close menu when clicking on a link
             document.querySelectorAll('.sidebar a').forEach(link => {
                 link.addEventListener('click', closeMobileMenu);
             });
-            
+
             // Handle window resize
             window.addEventListener('resize', function() {
                 if (window.innerWidth >= 1024) {
                     closeMobileMenu();
                 }
             });
-            
+
             // Add loading state to buttons
             const buttons = document.querySelectorAll('button');
             buttons.forEach(button => {
@@ -1373,7 +1374,7 @@ if (isset($_POST['update_profile'])) {
                     }
                 });
             });
-            
+
             // Add hover effects to cards
             const cards = document.querySelectorAll('.card-hover');
             cards.forEach(card => {
@@ -1387,6 +1388,7 @@ if (isset($_POST['update_profile'])) {
         });
     </script>
 </body>
+
 </html>
 
 <?php $conn->close(); ?>
